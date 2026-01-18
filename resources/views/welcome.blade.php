@@ -53,70 +53,80 @@
             <main class="flex max-w-[335px] w-full flex-col-reverse lg:max-w-4xl lg:flex-row">
                 <div class="text-[13px] leading-[20px] flex-1 p-6 pb-12 lg:p-20 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tl-lg lg:rounded-br-none">
                     <h1 class="mb-1 font-medium">Let's get started</h1>
-                    <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">Laravel has an incredibly rich ecosystem. <br>We suggest starting with the following.</p>
-                    <ul class="flex flex-col mb-4 lg:mb-6">
-                        <li class="flex items-center gap-4 py-2 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:top-1/2 before:bottom-0 before:left-[0.4rem] before:absolute">
-                            <span class="relative py-1 bg-white dark:bg-[#161615]">
-                                <span class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
-                                    <span class="rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A] w-1.5 h-1.5"></span>
+                    <p class="mb-2 text-[#706f6c] dark:text-[#A1A09A]">Choose a subject to begin your learning journey</p>
+
+                    <!-- Loading state -->
+                    <div id="loading-state" class="flex items-center gap-4 py-4">
+                        <div class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
+                            <div class="rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A] w-1.5 h-1.5 animate-pulse"></div>
+                        </div>
+                        <span class="text-[#706f6c] dark:text-[#A1A09A]">Loading subjects...</span>
+                    </div>
+
+                    <!-- Error state -->
+                    <div id="error-state" class="hidden flex items-center gap-4 py-4">
+                        <div class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
+                            <span class="text-red-500 text-xs">!</span>
+                        </div>
+                        <span class="text-red-600 dark:text-red-400">Failed to load subjects. Please try again.</span>
+                    </div>
+
+                    <!-- Subjects container -->
+                    <div id="subjects-container" class="hidden">
+                        <div id="subjects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                            <!-- Subjects will be dynamically inserted here -->
+                        </div>
+                    </div>
+
+                    <!-- Fallback content (shown if API fails) -->
+                    <div id="fallback-content" class="hidden">
+                        <ul class="flex flex-col mb-4 lg:mb-6">
+                            <li class="flex items-center gap-4 py-2 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:top-1/2 before:bottom-0 before:left-[0.4rem] before:absolute">
+                                <span class="relative py-1 bg-white dark:bg-[#161615]">
+                                    <span class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
+                                        <span class="rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A] w-1.5 h-1.5"></span>
+                                    </span>
                                 </span>
-                            </span>
-                            <span>
-                                Read the
-                                <a href="https://laravel.com/docs" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
-                                    <span>Documentation</span>
-                                    <svg
-                                        width="10"
-                                        height="11"
-                                        viewBox="0 0 10 11"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="w-2.5 h-2.5"
-                                    >
-                                        <path
-                                            d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001"
-                                            stroke="currentColor"
-                                            stroke-linecap="square"
-                                        />
-                                    </svg>
-                                </a>
-                            </span>
-                        </li>
-                        <li class="flex items-center gap-4 py-2 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:bottom-1/2 before:top-0 before:left-[0.4rem] before:absolute">
-                            <span class="relative py-1 bg-white dark:bg-[#161615]">
-                                <span class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
-                                    <span class="rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A] w-1.5 h-1.5"></span>
+                                <span>
+                                    Read the
+                                    <a href="https://laravel.com/docs" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
+                                        <span>Documentation</span>
+                                        <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-2.5 h-2.5">
+                                            <path d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001" stroke="currentColor" stroke-linecap="square" />
+                                        </svg>
+                                    </a>
                                 </span>
-                            </span>
-                            <span>
-                                Watch video tutorials at
-                                <a href="https://laracasts.com" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
-                                    <span>Laracasts</span>
-                                    <svg
-                                        width="10"
-                                        height="11"
-                                        viewBox="0 0 10 11"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="w-2.5 h-2.5"
-                                    >
-                                        <path
-                                            d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001"
-                                            stroke="currentColor"
-                                            stroke-linecap="square"
-                                        />
-                                    </svg>
+                            </li>
+                            <li class="flex items-center gap-4 py-2 relative before:border-l before:border-[#e3e3e0] dark:before:border-[#3E3E3A] before:bottom-1/2 before:top-0 before:left-[0.4rem] before:absolute">
+                                <span class="relative py-1 bg-white dark:bg-[#161615]">
+                                    <span class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-3.5 h-3.5 border dark:border-[#3E3E3A] border-[#e3e3e0]">
+                                        <span class="rounded-full bg-[#dbdbd7] dark:bg-[#3E3E3A] w-1.5 h-1.5"></span>
+                                    </span>
+                                </span>
+                                <span>
+                                    Watch video tutorials at
+                                    <a href="https://laracasts.com" target="_blank" class="inline-flex items-center space-x-1 font-medium underline underline-offset-4 text-[#f53003] dark:text-[#FF4433] ml-1">
+                                        <span>Laracasts</span>
+                                        <svg width="10" height="11" viewBox="0 0 10 11" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-2.5 h-2.5">
+                                            <path d="M7.70833 6.95834V2.79167H3.54167M2.5 8L7.5 3.00001" stroke="currentColor" stroke-linecap="square" />
+                                        </svg>
+                                    </a>
+                                </span>
+                            </li>
+                        </ul>
+                        <ul class="flex gap-3 text-sm leading-normal">
+                            <li>
+                                <a href="https://cloud.laravel.com" target="_blank" class="inline-block dark:bg-[#eeeeec] dark:border-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white dark:hover:border-white hover:bg-black hover:border-black px-5 py-1.5 bg-[#1b1b18] rounded-sm border border-black text-white text-sm leading-normal">
+                                    Deploy now
                                 </a>
-                            </span>
-                        </li>
-                    </ul>
-                    <ul class="flex gap-3 text-sm leading-normal">
-                        <li>
-                            <a href="https://cloud.laravel.com" target="_blank" class="inline-block dark:bg-[#eeeeec] dark:border-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white dark:hover:border-white hover:bg-black hover:border-black px-5 py-1.5 bg-[#1b1b18] rounded-sm border border-black text-white text-sm leading-normal">
-                                Deploy now
-                            </a>
-                        </li>
-                    </ul>
+                            </li>
+                            <li>
+                                <button id="contact-us-btn" class="inline-block dark:bg-[#eeeeec] dark:border-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white dark:hover:border-white hover:bg-black hover:border-black px-5 py-1.5 bg-[#1b1b18] rounded-sm border border-black text-white text-sm leading-normal">
+                                    Contact Us
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="bg-[#fff2f2] dark:bg-[#1D0002] relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden">
                     {{-- Laravel Logo --}}
@@ -273,5 +283,313 @@
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
+
+        <!-- Contact Us Modal -->
+        <div id="contact-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white dark:bg-[#161615] rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-semibold text-[#1b1b18] dark:text-[#EDEDEC]">Contact Us</h2>
+                            <button id="close-modal" class="text-[#706f6c] dark:text-[#A1A09A] hover:text-[#1b1b18] dark:hover:text-[#EDEDEC]">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <form id="contact-form" enctype="multipart/form-data">
+                            <!-- Honeypot field for spam protection -->
+                            <input type="text" name="honeypot" class="hidden" autocomplete="off">
+
+                            <div class="space-y-4">
+                                <!-- Full Name -->
+                                <div>
+                                    <label for="full_name" class="block text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC] mb-1">
+                                        Full Name *
+                                    </label>
+                                    <input type="text" id="full_name" name="full_name" required
+                                           class="w-full px-3 py-2 border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-md bg-white dark:bg-[#161615] text-[#1b1b18] dark:text-[#EDEDEC] focus:ring-2 focus:ring-[#f53003] focus:border-transparent">
+                                    <div class="text-red-500 text-sm mt-1 hidden" id="full_name_error"></div>
+                                </div>
+
+                                <!-- Email -->
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC] mb-1">
+                                        Email Address *
+                                    </label>
+                                    <input type="email" id="email" name="email" required
+                                           class="w-full px-3 py-2 border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-md bg-white dark:bg-[#161615] text-[#1b1b18] dark:text-[#EDEDEC] focus:ring-2 focus:ring-[#f53003] focus:border-transparent">
+                                    <div class="text-red-500 text-sm mt-1 hidden" id="email_error"></div>
+                                </div>
+
+                                <!-- Phone -->
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC] mb-1">
+                                        Phone Number
+                                    </label>
+                                    <input type="tel" id="phone" name="phone"
+                                           class="w-full px-3 py-2 border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-md bg-white dark:bg-[#161615] text-[#1b1b18] dark:text-[#EDEDEC] focus:ring-2 focus:ring-[#f53003] focus:border-transparent">
+                                    <div class="text-red-500 text-sm mt-1 hidden" id="phone_error"></div>
+                                </div>
+
+                                <!-- Interest -->
+                                <div>
+                                    <label for="interest" class="block text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC] mb-1">
+                                        I'm interested in *
+                                    </label>
+                                    <select id="interest" name="interest" required
+                                            class="w-full px-3 py-2 border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-md bg-white dark:bg-[#161615] text-[#1b1b18] dark:text-[#EDEDEC] focus:ring-2 focus:ring-[#f53003] focus:border-transparent">
+                                        <option value="">Select an option</option>
+                                        <option value="general">General Inquiry</option>
+                                        <option value="website_bug">Report a Website Bug</option>
+                                        <option value="business_partnership">Business Partnership</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="text-red-500 text-sm mt-1 hidden" id="interest_error"></div>
+                                </div>
+
+                                <!-- Message -->
+                                <div>
+                                    <label for="message" class="block text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC] mb-1">
+                                        Message *
+                                    </label>
+                                    <textarea id="message" name="message" rows="4" required
+                                              class="w-full px-3 py-2 border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-md bg-white dark:bg-[#161615] text-[#1b1b18] dark:text-[#EDEDEC] focus:ring-2 focus:ring-[#f53003] focus:border-transparent resize-vertical"
+                                              placeholder="Please describe your inquiry..."></textarea>
+                                    <div class="text-red-500 text-sm mt-1 hidden" id="message_error"></div>
+                                </div>
+
+                                <!-- File Upload -->
+                                <div>
+                                    <label for="files" class="block text-sm font-medium text-[#1b1b18] dark:text-[#EDEDEC] mb-1">
+                                        Attachments (optional)
+                                    </label>
+                                    <input type="file" id="files" name="files[]" multiple accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.webp"
+                                           class="w-full px-3 py-2 border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-md bg-white dark:bg-[#161615] text-[#1b1b18] dark:text-[#EDEDEC] focus:ring-2 focus:ring-[#f53003] focus:border-transparent">
+                                    <p class="text-xs text-[#706f6c] dark:text-[#A1A09A] mt-1">
+                                        Max 5 files, 5MB each. Allowed: PDF, Word, Text, Images
+                                    </p>
+                                    <div class="text-red-500 text-sm mt-1 hidden" id="files_error"></div>
+                                </div>
+
+                                <!-- Consent -->
+                                <div>
+                                    <label class="flex items-start space-x-2">
+                                        <input type="checkbox" id="consent" name="consent" required
+                                               class="mt-1 text-[#f53003] focus:ring-[#f53003]">
+                                        <span class="text-sm text-[#1b1b18] dark:text-[#EDEDEC]">
+                                            I agree to the <a href="#" class="text-[#f53003] underline">Privacy Policy</a> and consent to being contacted regarding my inquiry.
+                                        </span>
+                                    </label>
+                                    <div class="text-red-500 text-sm mt-1 hidden" id="consent_error"></div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="mt-6">
+                                <button type="submit" id="submit-btn"
+                                        class="w-full bg-[#f53003] hover:bg-[#e02801] text-white font-medium py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    <span id="submit-text">Send Message</span>
+                                    <span id="loading-text" class="hidden">Sending...</span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Success Message -->
+                        <div id="success-message" class="hidden mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-green-800 dark:text-green-200">
+                                        Message sent successfully! We'll get back to you soon.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div id="error-message" class="hidden mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-red-800 dark:text-red-200" id="error-text">
+                                        An error occurred. Please try again.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const loadingState = document.getElementById('loading-state');
+                const errorState = document.getElementById('error-state');
+                const subjectsContainer = document.getElementById('subjects-container');
+                const subjectsGrid = document.getElementById('subjects-grid');
+                const fallbackContent = document.getElementById('fallback-content');
+
+                // Contact modal elements
+                const contactBtn = document.getElementById('contact-us-btn');
+                const contactModal = document.getElementById('contact-modal');
+                const closeModal = document.getElementById('close-modal');
+                const contactForm = document.getElementById('contact-form');
+                const submitBtn = document.getElementById('submit-btn');
+                const submitText = document.getElementById('submit-text');
+                const loadingText = document.getElementById('loading-text');
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                const errorText = document.getElementById('error-text');
+
+                // Function to create subject card
+                function createSubjectCard(subject) {
+                    return `
+                        <div class="bg-white dark:bg-[#161615] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                             onclick="window.location.href='/subjects/${subject.id}'">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="flex items-center justify-center rounded-full bg-[#FDFDFC] dark:bg-[#161615] shadow-[0px_0px_1px_0px_rgba(0,0,0,0.03),0px_1px_2px_0px_rgba(0,0,0,0.06)] w-8 h-8 border dark:border-[#3E3E3A] border-[#e3e3e0]">
+                                    <span class="text-[#1b1b18] dark:text-[#EDEDEC] font-medium text-sm">
+                                        ${subject.name.charAt(0).toUpperCase()}
+                                    </span>
+                                </div>
+                                <h3 class="font-medium text-[#1b1b18] dark:text-[#EDEDEC]">${subject.name}</h3>
+                            </div>
+                            <p class="text-sm text-[#706f6c] dark:text-[#A1A09A] line-clamp-2">
+                                ${subject.description || 'Explore questions and learn about this subject.'}
+                            </p>
+                        </div>
+                    `;
+                }
+
+                // Function to show error state
+                function showError() {
+                    loadingState.classList.add('hidden');
+                    errorState.classList.remove('hidden');
+                    fallbackContent.classList.remove('hidden');
+                }
+
+                // Function to show subjects
+                function showSubjects(subjects) {
+                    loadingState.classList.add('hidden');
+                    subjectsContainer.classList.remove('hidden');
+
+                    if (subjects && subjects.length > 0) {
+                        subjectsGrid.innerHTML = subjects.map(createSubjectCard).join('');
+                    } else {
+                        // Show fallback if no subjects
+                        fallbackContent.classList.remove('hidden');
+                    }
+                }
+
+                // Contact modal functions
+                function openModal() {
+                    contactModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                }
+
+                function closeModalFunc() {
+                    contactModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                    resetForm();
+                }
+
+                function resetForm() {
+                    contactForm.reset();
+                    successMessage.classList.add('hidden');
+                    errorMessage.classList.add('hidden');
+                    submitBtn.disabled = false;
+                    submitText.classList.remove('hidden');
+                    loadingText.classList.add('hidden');
+
+                    // Hide error messages
+                    document.querySelectorAll('[id$="_error"]').forEach(el => {
+                        el.classList.add('hidden');
+                    });
+                }
+
+                function showFormErrors(errors) {
+                    Object.keys(errors).forEach(field => {
+                        const errorEl = document.getElementById(field + '_error');
+                        if (errorEl) {
+                            errorEl.textContent = errors[field][0];
+                            errorEl.classList.remove('hidden');
+                        }
+                    });
+                }
+
+                // Modal event listeners
+                contactBtn.addEventListener('click', openModal);
+                closeModal.addEventListener('click', closeModalFunc);
+
+                // Close modal when clicking outside
+                contactModal.addEventListener('click', function(e) {
+                    if (e.target === contactModal) {
+                        closeModalFunc();
+                    }
+                });
+
+                // Form submission
+                contactForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+
+                    // Hide previous messages
+                    successMessage.classList.add('hidden');
+                    errorMessage.classList.add('hidden');
+
+                    // Hide field errors
+                    document.querySelectorAll('[id$="_error"]').forEach(el => {
+                        el.classList.add('hidden');
+                    });
+
+                    // Show loading state
+                    submitBtn.disabled = true;
+                    submitText.classList.add('hidden');
+                    loadingText.classList.remove('hidden');
+
+                    try {
+                        const formData = new FormData(contactForm);
+
+                        const response = await fetch('/api/contact', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                            }
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            successMessage.classList.remove('hidden');
+                            // Reset form after successful submission
+                            setTimeout(() => {
+                                closeModalFunc();
+                            }, 3000);
+                        } else {
+                            if (result.errors) {
+                                showFormErrors(result.errors);
+                            } else {
+                                errorText.textContent = result.message || 'An error occurred. Please try again.';
+                                errorMessage.classList.remove('hidden');
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Contact form submission error:', error);
+                        errorText.textContent = 'Network error. Please check your connection and try again.';
+                        errorMessage.classList.remove('hidden');
+                    } finally {
+                        submitBtn.disabled = false;
+                        submitText.classList.remove('hidden');
     </body>
 </html>

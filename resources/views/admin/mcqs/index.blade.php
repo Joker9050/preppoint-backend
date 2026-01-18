@@ -102,9 +102,6 @@
                                 <a href="{{ route('admin.mcqs.preview', $mcq) }}" class="text-purple-600 hover:text-purple-900" title="Preview">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="{{ route('admin.mcqs.show', $mcq) }}" class="text-indigo-600 hover:text-indigo-900" title="View">
-                                    <i class="fas fa-info-circle"></i>
-                                </a>
                                 <a href="{{ route('admin.mcqs.edit', $mcq) }}" class="text-blue-600 hover:text-blue-900" title="Edit">
                                     <i class="fas fa-edit"></i>
                                 </a>

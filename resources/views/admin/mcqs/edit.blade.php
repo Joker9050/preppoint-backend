@@ -1,0 +1,640 @@
+@extends('admin.layout')
+
+@section('title', 'Edit MCQ')
+
+@section('content')
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-edit text-white text-xl"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Edit MCQ</h1>
+                        <p class="text-gray-600 mt-1">Question #{{ $mcq->question_no }} • {{ $mcq->topic->name ?? 'No Topic' }}</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="{{ route('admin.mcqs.preview', $mcq) }}" class="inline-flex items-center px-4 py-2 border border-purple-300 rounded-lg text-sm font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors">
+                        <i class="fas fa-eye mr-2"></i>
+                        Preview
+                    </a>
+                    <a href="{{ route('admin.mcqs.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                <span class="flex items-center">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Basic Info
+                </span>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+                <span class="flex items-center">
+                    <i class="fas fa-question-circle mr-1"></i>
+                    Question
+                </span>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+                <span class="flex items-center text-blue-600 font-medium">
+                    <i class="fas fa-list mr-1"></i>
+                    Options
+                </span>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+                <span class="flex items-center">
+                    <i class="fas fa-check-circle mr-1"></i>
+                    Review
+                </span>
+            </div>
+        </div>
+
+        <!-- Edit Form -->
+        <form action="{{ route('admin.mcqs.update', $mcq) }}" method="POST" enctype="multipart/form-data" class="space-y-8">
+            @csrf
+            @method('PATCH')
+
+            <!-- Basic Information Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-info-circle text-blue-600"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900">Basic Information</h2>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Topic -->
+                        <div class="lg:col-span-1">
+                            <label for="topic_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                Topic <span class="text-red-500">*</span>
+                            </label>
+                            <select id="topic_id" name="topic_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('topic_id') border-red-500 @enderror">
+                                <option value="">Select Topic</option>
+                                @foreach($topics as $topic)
+                                <option value="{{ $topic->id }}" {{ old('topic_id', $mcq->topic_id) == $topic->id ? 'selected' : '' }}>
+                                    {{ $topic->name }}
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('topic_id')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <!-- Subtopic -->
+                        <div class="lg:col-span-1">
+                            <label for="subtopic_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                Subtopic
+                            </label>
+                            <select id="subtopic_id" name="subtopic_id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('subtopic_id') border-red-500 @enderror">
+                                <option value="">Select Subtopic</option>
+                                @foreach($subtopics as $subtopic)
+                                <option value="{{ $subtopic->id }}" {{ old('subtopic_id', $mcq->subtopic_id) == $subtopic->id ? 'selected' : '' }}>
+                                    {{ $subtopic->name }}
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('subtopic_id')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <!-- Question Number -->
+                        <div class="lg:col-span-1">
+                            <label for="question_no" class="block text-sm font-medium text-gray-700 mb-2">
+                                Question Number <span class="text-red-500">*</span>
+                            </label>
+                            <input type="number" id="question_no" name="question_no" value="{{ old('question_no', $mcq->question_no) }}" min="1"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('question_no') border-red-500 @enderror">
+                            @error('question_no')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <!-- Difficulty -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Difficulty <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex space-x-2">
+                                @foreach(['easy' => ['Easy', 'green'], 'medium' => ['Medium', 'yellow'], 'hard' => ['Hard', 'red']] as $value => $config)
+                                <label class="flex-1">
+                                    <input type="radio" name="difficulty" value="{{ $value }}" {{ old('difficulty', $mcq->difficulty) == $value ? 'checked' : '' }}
+                                           class="sr-only peer">
+                                    <div class="p-2 text-center border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-{{ $config[1] }}-500 peer-checked:bg-{{ $config[1] }}-50 peer-checked:text-{{ $config[1] }}-700 transition-all">
+                                        <div class="text-xs font-medium">{{ $config[0] }}</div>
+                                    </div>
+                                </label>
+                                @endforeach
+                            </div>
+                            @error('difficulty')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <!-- Status -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Status <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex space-x-2">
+                                @foreach(['active' => ['Active', 'green'], 'inactive' => ['Inactive', 'gray']] as $value => $config)
+                                <label class="flex-1">
+                                    <input type="radio" name="status" value="{{ $value }}" {{ old('status', $mcq->status) == $value ? 'checked' : '' }}
+                                           class="sr-only peer">
+                                    <div class="p-2 text-center border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-{{ $config[1] }}-500 peer-checked:bg-{{ $config[1] }}-50 peer-checked:text-{{ $config[1] }}-700 transition-all">
+                                        <div class="text-xs font-medium">{{ $config[0] }}</div>
+                                    </div>
+                                </label>
+                                @endforeach
+                            </div>
+                            @error('status')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <!-- Correct Option -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Correct Answer <span class="text-red-500">*</span>
+                            </label>
+                            <div class="grid grid-cols-2 gap-2">
+                                @foreach(['A', 'B', 'C', 'D'] as $letter)
+                                <label class="relative">
+                                    <input type="radio" name="correct_option" value="{{ $letter }}" {{ old('correct_option', $mcq->correct_option) == $letter ? 'checked' : '' }}
+                                           class="sr-only peer">
+                                    <div class="p-3 text-center border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-green-500 peer-checked:bg-green-50 peer-checked:text-green-700 transition-all">
+                                        <div class="text-lg font-bold">{{ $letter }}</div>
+                                        <div class="text-xs">Option {{ $letter }}</div>
+                                    </div>
+                                    <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center opacity-0 peer-checked:opacity-100 transition-opacity">
+                                        <i class="fas fa-check text-white text-xs"></i>
+                                    </div>
+                                </label>
+                                @endforeach
+                            </div>
+                            @error('correct_option')
+                                <p class="mt-1 text-sm text-red-600 flex items-center">
+                                    <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-purple-50 to-pink-50 border-b border-gray-200">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-question-circle text-purple-600"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900">Question Content</h2>
+                    </div>
+                </div>
+                <div class="p-6 space-y-6">
+                    <!-- Question Text -->
+                    <div>
+                        <label for="question" class="block text-sm font-medium text-gray-700 mb-2">
+                            Question Text <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="question" name="question" rows="4"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors resize-vertical @error('question') border-red-500 @enderror"
+                                  placeholder="Enter your question here...">{{ old('question', $mcq->question) }}</textarea>
+                        @error('question')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    <!-- Question Code -->
+                    <div>
+                        <label for="question_code" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-code mr-1 text-gray-500"></i>
+                            Code Snippet (Optional)
+                        </label>
+                        <textarea id="question_code" name="question_code" rows="6"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-colors font-mono text-sm bg-gray-50 resize-vertical @error('question_code') border-red-500 @enderror"
+                                  placeholder="Enter code snippet for the question...">{{ old('question_code', $mcq->question_code) }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500">Code will be displayed in a formatted code block</p>
+                        @error('question_code')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+
+                    <!-- Question Image -->
+                    <div>
+                        <label for="question_image" class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-image mr-1 text-gray-500"></i>
+                            Question Image (Optional)
+                        </label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors">
+                            <input type="file" id="question_image" name="question_image" accept="image/*" class="hidden">
+                            <div id="question-image-preview" class="space-y-4">
+                                @if($mcq->question_image)
+                                    <div class="relative inline-block">
+                                        <img src="{{ asset('storage/' . $mcq->question_image) }}" alt="Current Question Image"
+                                             class="max-w-xs h-auto rounded-lg shadow-md">
+                                        <button type="button" onclick="removeQuestionImage()"
+                                                class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+                                            <i class="fas fa-times text-xs"></i>
+                                        </button>
+                                    </div>
+                                    <p class="text-sm text-gray-600">Click to replace image</p>
+                                @else
+                                    <div class="text-gray-400">
+                                        <i class="fas fa-cloud-upload-alt text-4xl mb-2"></i>
+                                        <p class="text-sm">Click to upload image</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        @error('question_image')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <!-- Answer Options Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-gray-200">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-list text-green-600"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900">Answer Options</h2>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        @php
+                            $options = is_array($mcq->options) ? $mcq->options : json_decode($mcq->options, true);
+                        @endphp
+
+                        @foreach(['A', 'B', 'C', 'D'] as $letter)
+                        <div class="border border-gray-200 rounded-xl p-5 hover:border-green-300 transition-colors {{ $mcq->correct_option == $letter ? 'ring-2 ring-green-200 bg-green-50' : '' }}">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center text-white font-bold">
+                                        {{ $letter }}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-gray-900">Option {{ $letter }}</h3>
+                                        @if($mcq->correct_option == $letter)
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                <i class="fas fa-check-circle mr-1"></i>Correct Answer
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <!-- Option Text -->
+                                <div>
+                                    <label for="option_{{ $letter }}_text" class="block text-sm font-medium text-gray-700 mb-1">
+                                        Text <span class="text-red-500">*</span>
+                                    </label>
+                                    <input type="text" id="option_{{ $letter }}_text" name="option_{{ $letter }}" value="{{ old('option_' . $letter, $options[$letter]['text'] ?? '') }}"
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('option_' . $letter) border-red-500 @enderror"
+                                           placeholder="Enter option text...">
+                                    @error('option_' . $letter)
+                                        <p class="mt-1 text-sm text-red-600 flex items-center">
+                                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                                        </p>
+                                    @enderror
+                                </div>
+
+                                <!-- Option Code -->
+                                <div>
+                                    <label for="option_{{ $letter }}_code" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-code mr-1 text-gray-500"></i>
+                                        Code (Optional)
+                                    </label>
+                                    <textarea id="option_{{ $letter }}_code" name="option_{{ $letter }}_code" rows="3"
+                                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors font-mono text-sm bg-gray-50 resize-vertical"
+                                              placeholder="Enter code snippet...">{{ old('option_' . $letter . '_code', $options[$letter]['code'] ?? '') }}</textarea>
+                                </div>
+
+                                <!-- Option Image -->
+                                <div>
+                                    <label for="option_{{ $letter }}_image" class="block text-sm font-medium text-gray-700 mb-1">
+                                        <i class="fas fa-image mr-1 text-gray-500"></i>
+                                        Image (Optional)
+                                    </label>
+                                    <div class="border border-gray-200 rounded-lg p-3">
+                                        <input type="file" id="option_{{ $letter }}_image" name="option_{{ $letter }}_image" accept="image/*" class="hidden">
+                                        <div class="text-center">
+                                            @if(isset($options[$letter]['image']) && !empty($options[$letter]['image']))
+                                                <div class="relative inline-block mb-2">
+                                                    <img src="{{ asset('storage/' . $options[$letter]['image']) }}" alt="Option {{ $letter }} Image"
+                                                         class="max-w-full h-20 rounded shadow-sm">
+                                                    <button type="button" onclick="removeOptionImage('{{ $letter }}')"
+                                                            class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+                                                        <i class="fas fa-times text-xs"></i>
+                                                    </button>
+                                                </div>
+                                                <p class="text-xs text-gray-600">Click to replace</p>
+                                            @else
+                                                <div class="text-gray-400 py-4">
+                                                    <i class="fas fa-image text-2xl mb-1"></i>
+                                                    <p class="text-xs">Click to add image</p>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            <!-- Explanation Card -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="px-6 py-4 bg-gradient-to-r from-orange-50 to-amber-50 border-b border-gray-200">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-lightbulb text-orange-600"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900">Explanation</h2>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div>
+                        <label for="explanation" class="block text-sm font-medium text-gray-700 mb-2">
+                            Detailed Explanation (Optional)
+                        </label>
+                        <textarea id="explanation" name="explanation" rows="4"
+                                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors resize-vertical @error('explanation') border-red-500 @enderror"
+                                  placeholder="Provide a detailed explanation for the correct answer...">{{ old('explanation', $mcq->explanation) }}</textarea>
+                        <p class="mt-1 text-xs text-gray-500">This will help students understand why the answer is correct</p>
+                        @error('explanation')
+                            <p class="mt-1 text-sm text-red-600 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-between bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-600">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Make sure all required fields are filled
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <a href="{{ route('admin.mcqs.index') }}" class="px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors">
+                        Cancel
+                    </a>
+                    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform hover:scale-105">
+                        <i class="fas fa-save mr-2"></i>
+                        Update MCQ
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Topic-Subtopic dynamic loading
+document.getElementById('topic_id').addEventListener('change', function() {
+    const topicId = this.value;
+    const subtopicSelect = document.getElementById('subtopic_id');
+
+    if (topicId) {
+        fetch(`/admin/mcqs/get-subtopics/${topicId}`)
+            .then(response => response.json())
+            .then(data => {
+                subtopicSelect.innerHTML = '<option value="">Select Subtopic</option>';
+                data.forEach(subtopic => {
+                    subtopicSelect.innerHTML += `<option value="${subtopic.id}">${subtopic.name}</option>`;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    } else {
+        subtopicSelect.innerHTML = '<option value="">Select Subtopic</option>';
+    }
+});
+
+// Radio button functionality for difficulty, status, and correct answer
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle difficulty radio buttons
+    const difficultyRadios = document.querySelectorAll('input[name="difficulty"]');
+    difficultyRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Remove selected class from all difficulty options
+            document.querySelectorAll('input[name="difficulty"]').forEach(r => {
+                r.closest('label').querySelector('div').classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-700');
+                r.closest('label').querySelector('div').classList.add('border-gray-200');
+            });
+            // Add selected class to the checked option
+            if (this.checked) {
+                this.closest('label').querySelector('div').classList.remove('border-gray-200');
+                this.closest('label').querySelector('div').classList.add('border-blue-500', 'bg-blue-50', 'text-blue-700');
+            }
+        });
+    });
+
+    // Handle status radio buttons
+    const statusRadios = document.querySelectorAll('input[name="status"]');
+    statusRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Remove selected class from all status options
+            document.querySelectorAll('input[name="status"]').forEach(r => {
+                r.closest('label').querySelector('div').classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-700');
+                r.closest('label').querySelector('div').classList.add('border-gray-200');
+            });
+            // Add selected class to the checked option
+            if (this.checked) {
+                this.closest('label').querySelector('div').classList.remove('border-gray-200');
+                this.closest('label').querySelector('div').classList.add('border-blue-500', 'bg-blue-50', 'text-blue-700');
+            }
+        });
+    });
+
+    // Handle correct answer radio buttons
+    const correctOptionRadios = document.querySelectorAll('input[name="correct_option"]');
+    correctOptionRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            // Remove selected class from all correct answer options
+            document.querySelectorAll('input[name="correct_option"]').forEach(r => {
+                r.closest('label').querySelector('div').classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-700');
+                r.closest('label').querySelector('.absolute').classList.add('opacity-0');
+                r.closest('label').querySelector('.absolute').classList.remove('opacity-100');
+            });
+            // Add selected class to the checked option
+            if (this.checked) {
+                this.closest('label').querySelector('div').classList.add('border-blue-500', 'bg-blue-50', 'text-blue-700');
+                this.closest('label').querySelector('.absolute').classList.remove('opacity-0');
+                this.closest('label').querySelector('.absolute').classList.add('opacity-100');
+            }
+        });
+    });
+
+    // Initialize the visual state on page load
+    difficultyRadios.forEach(radio => {
+        if (radio.checked) {
+            radio.closest('label').querySelector('div').classList.remove('border-gray-200');
+            radio.closest('label').querySelector('div').classList.add('border-blue-500', 'bg-blue-50', 'text-blue-700');
+        }
+    });
+
+    statusRadios.forEach(radio => {
+        if (radio.checked) {
+            radio.closest('label').querySelector('div').classList.remove('border-gray-200');
+            radio.closest('label').querySelector('div').classList.add('border-blue-500', 'bg-blue-50', 'text-blue-700');
+        }
+    });
+
+    correctOptionRadios.forEach(radio => {
+        if (radio.checked) {
+            radio.closest('label').querySelector('div').classList.add('border-blue-500', 'bg-blue-50', 'text-blue-700');
+            radio.closest('label').querySelector('.absolute').classList.remove('opacity-0');
+            radio.closest('label').querySelector('.absolute').classList.add('opacity-100');
+        }
+    });
+
+    // Update button confirmation
+    const updateBtn = document.querySelector('button[type="submit"]');
+    if (updateBtn) {
+        updateBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Show confirmation dialog
+            const confirmed = confirm('Are you sure you want to update this MCQ? This will save all changes to the database.');
+            
+            if (confirmed) {
+                // Submit the form
+                this.closest('form').submit();
+            }
+        });
+    }
+});
+
+document.getElementById('question_image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('question-image-preview').innerHTML = `
+                <div class="relative inline-block">
+                    <img src="${e.target.result}" alt="Preview" class="max-w-xs h-auto rounded-lg shadow-md">
+                    <button type="button" onclick="clearQuestionImage()" class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+                <p class="text-sm text-gray-600">New image selected</p>
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Option image handling
+@foreach(['A', 'B', 'C', 'D'] as $letter)
+document.getElementById('option_{{ $letter }}_image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const letter = '{{ $letter }}';
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const container = document.querySelector(`label[for="option_${letter}_image"] .border`);
+            container.innerHTML = `
+                <div class="text-center">
+                    <div class="relative inline-block mb-2">
+                        <img src="${e.target.result}" alt="Preview" class="max-w-full h-20 rounded shadow-sm">
+                        <button type="button" onclick="clearOptionImage('${letter}')" class="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors">
+                            <i class="fas fa-times text-xs"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-600">New image selected</p>
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+@endforeach
+
+// Image removal functions
+function removeQuestionImage() {
+    document.getElementById('question-image-preview').innerHTML = `
+        <div class="text-gray-400">
+            <i class="fas fa-cloud-upload-alt text-4xl mb-2"></i>
+            <p class="text-sm">Click to upload image</p>
+        </div>
+    `;
+    document.getElementById('question_image').value = '';
+}
+
+function clearQuestionImage() {
+    removeQuestionImage();
+}
+
+function removeOptionImage(letter) {
+    const container = document.querySelector(`label[for="option_${letter}_image"] .border`);
+    container.innerHTML = `
+        <div class="text-center">
+            <div class="text-gray-400 py-4">
+                <i class="fas fa-image text-2xl mb-1"></i>
+                <p class="text-xs">Click to add image</p>
+            </div>
+        </div>
+    `;
+    document.getElementById(`option_${letter}_image`).value = '';
+}
+
+function clearOptionImage(letter) {
+    removeOptionImage(letter);
+}
+
+// Click to upload for images
+document.querySelectorAll('input[type="file"]').forEach(input => {
+    input.addEventListener('click', function(e) {
+        // Allow default behavior
+    });
+});
+
+// Make image containers clickable
+document.querySelectorAll('.border input[type="file"]').forEach(input => {
+    const container = input.parentElement;
+    container.addEventListener('click', function() {
+        input.click();
+    });
+});
+</script>
+@endsection

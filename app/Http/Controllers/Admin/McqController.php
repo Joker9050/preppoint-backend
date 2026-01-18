@@ -101,11 +101,7 @@ class McqController extends Controller
             ->with('success', 'MCQ created successfully.');
     }
 
-    public function show(Mcq $mcq)
-    {
-        $mcq->load('topic', 'subtopic');
-        return view('admin.mcqs.show', compact('mcq'));
-    }
+
 
     public function edit(Mcq $mcq)
     {
@@ -123,10 +119,10 @@ class McqController extends Controller
             'question' => 'required|string',
             'question_code' => 'nullable|string',
             'question_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'option_a' => 'required|string',
-            'option_b' => 'required|string',
-            'option_c' => 'required|string',
-            'option_d' => 'required|string',
+            'option_A' => 'required|string',
+            'option_B' => 'required|string',
+            'option_C' => 'required|string',
+            'option_D' => 'required|string',
             'correct_option' => 'required|in:A,B,C,D',
             'explanation' => 'nullable|string',
             'difficulty' => 'required|in:easy,medium,hard',
@@ -140,11 +136,40 @@ class McqController extends Controller
         }
 
         $options = [
-            'A' => $request->option_a,
-            'B' => $request->option_b,
-            'C' => $request->option_c,
-            'D' => $request->option_d,
+            'A' => [
+                'text' => $request->option_A,
+                'code' => $request->option_A_code ?? '',
+                'image' => '',
+            ],
+            'B' => [
+                'text' => $request->option_B,
+                'code' => $request->option_B_code ?? '',
+                'image' => '',
+            ],
+            'C' => [
+                'text' => $request->option_C,
+                'code' => $request->option_C_code ?? '',
+                'image' => '',
+            ],
+            'D' => [
+                'text' => $request->option_D,
+                'code' => $request->option_D_code ?? '',
+                'image' => '',
+            ],
         ];
+
+        // Handle option images
+        foreach (['A', 'B', 'C', 'D'] as $letter) {
+            $imageField = 'option_' . $letter . '_image';
+            if ($request->hasFile($imageField)) {
+                $imagePath = $request->file($imageField)->store('mcq_option_images', 'public');
+                $options[$letter]['image'] = $imagePath;
+            } else {
+                // Keep existing image if no new one uploaded
+                $existingOptions = is_array($mcq->options) ? $mcq->options : json_decode($mcq->options, true);
+                $options[$letter]['image'] = $existingOptions[$letter]['image'] ?? '';
+            }
+        }
 
         $data = [
             'topic_id' => $request->topic_id,
@@ -159,7 +184,7 @@ class McqController extends Controller
             'status' => $request->status,
         ];
 
-        // Handle image upload
+        // Handle question image upload
         if ($request->hasFile('question_image')) {
             // Delete old image if exists
             if ($mcq->question_image) {

@@ -71,7 +71,9 @@
             <!-- Options -->
             <div class="space-y-3">
                 <h3 class="text-md font-medium text-gray-900">Answer Options:</h3>
-                @php $options = json_decode($mcq->options, true) @endphp
+                @php
+                    $options = is_array($mcq->options) ? $mcq->options : json_decode($mcq->options, true);
+                @endphp
                 @foreach(['A', 'B', 'C', 'D'] as $letter)
                 <div class="flex items-start space-x-3 p-3 rounded-lg border
                     @if($mcq->correct_option == $letter) border-green-300 bg-green-50
@@ -84,7 +86,22 @@
                         </span>
                     </div>
                     <div class="flex-1">
-                        <p class="text-gray-900">{{ $options[$letter] ?? '' }}</p>
+                        @if(isset($options[$letter]))
+                            @php $option = $options[$letter]; @endphp
+                            @if(isset($option['text']) && !empty($option['text']))
+                                <p class="text-gray-900">{{ $option['text'] }}</p>
+                            @endif
+                            @if(isset($option['code']) && !empty($option['code']))
+                                <div class="bg-gray-100 rounded p-2 mt-2">
+                                    <pre class="text-sm font-mono text-gray-800 overflow-x-auto"><code>{{ $option['code'] }}</code></pre>
+                                </div>
+                            @endif
+                            @if(isset($option['image']) && !empty($option['image']))
+                                <div class="mt-2">
+                                    <img src="{{ asset('storage/' . $option['image']) }}" alt="Option Image" class="max-w-full h-auto rounded shadow">
+                                </div>
+                            @endif
+                        @endif
                         @if($mcq->correct_option == $letter)
                         <p class="text-sm text-green-600 font-medium mt-1">✓ Correct Answer</p>
                         @endif

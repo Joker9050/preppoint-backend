@@ -20,41 +20,38 @@ class CategoryController extends Controller
     {
         try {
             $categories = Category::with([
-                'subcategories' => function ($query) {
-                    $query->orderBy('name');
-                },
                 'subcategories.subjects' => function ($query) {
                     $query->orderBy('priority')->orderBy('name');
                 }
             ])
-            ->orderBy('name')
+            ->orderBy('id', 'asc')
             ->get()
             ->map(function ($category) {
+                $subcategories = $category->subcategories->map(function ($subcategory) use ($category) {
+                    return [
+                        'id' => $subcategory->id,
+                        'name' => $subcategory->name,
+                        'category_id' => $subcategory->category_id,
+                        'category_name' => $category->name,
+                        'subjects_count' => $subcategory->subjects->count(),
+                        'subjects' => $subcategory->subjects->map(function ($subject) use ($subcategory) {
+                            return [
+                                'id' => $subject->id,
+                                'name' => $subject->name,
+                                'subcategory_id' => $subject->subcategory_id,
+                                'subcategory_name' => $subcategory->name,
+                                'priority' => $subject->priority,
+                            ];
+                        }),
+                    ];
+                });
+
                 return [
                     'id' => $category->id,
                     'name' => $category->name,
-                    'subcategories_count' => $category->subcategories->count(),
-                    'subjects_count' => $category->subcategories->sum(function ($subcategory) {
-                        return $subcategory->subjects->count();
-                    }),
-                    'subcategories' => $category->subcategories->map(function ($subcategory) {
-                        return [
-                            'id' => $subcategory->id,
-                            'name' => $subcategory->name,
-                            'category_id' => $subcategory->category_id,
-                            'category_name' => $category->name,
-                            'subjects_count' => $subcategory->subjects->count(),
-                            'subjects' => $subcategory->subjects->map(function ($subject) {
-                                return [
-                                    'id' => $subject->id,
-                                    'name' => $subject->name,
-                                    'subcategory_id' => $subject->subcategory_id,
-                                    'subcategory_name' => $subcategory->name,
-                                    'priority' => $subject->priority,
-                                ];
-                            }),
-                        ];
-                    }),
+                    'subcategories_count' => $subcategories->count(),
+                    'subjects_count' => $subcategories->sum('subjects_count'),
+                    'subcategories' => $subcategories,
                 ];
             });
 
@@ -67,7 +64,7 @@ class CategoryController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to retrieve categories',
+                'message' => 'Failed to retrieve categories: ' . $e->getMessage(),
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -86,7 +83,6 @@ class CategoryController extends Controller
                 ->with(['subjects' => function ($query) {
                     $query->orderBy('priority')->orderBy('name');
                 }])
-                ->orderBy('name')
                 ->get()
                 ->map(function ($subcategory) {
                     return [
@@ -143,6 +139,69 @@ class CategoryController extends Controller
                         'subcategory_name' => $subcategory->name,
                         'category_id' => $subcategory->category_id,
                         'category_name' => $subcategory->category->name,
+                        'priority' => $subject->priority,
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'data' => $subjects,
+                'message' => 'Subjects retrieved successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve subjects',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get all subjects ordered by priority for learning scroll.
+     *
+     * @return JsonResponse
+     */
+    public function learningScrollSubjects(): JsonResponse
+    {
+        try {
+            $subjects = Subject::orderBy('priority', 'asc')->get(['id', 'name', 'priority']);
+
+            return response()->json([
+                'success' => true,
+                'data' => $subjects,
+                'message' => 'Learning scroll subjects retrieved successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve learning scroll subjects',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get all subjects with their subcategory and category information.
+     *
+     * @return JsonResponse
+     */
+    public function allSubjects(): JsonResponse
+    {
+        try {
+            $subjects = Subject::with(['subcategory.category'])
+                ->orderBy('priority', 'asc')
+                ->orderBy('name', 'asc')
+                ->get()
+                ->map(function ($subject) {
+                    return [
+                        'id' => $subject->id,
+                        'name' => $subject->name,
+                        'subcategory_id' => $subject->subcategory_id,
+                        'subcategory_name' => $subject->subcategory->name,
+                        'category_id' => $subject->subcategory->category->id,
+                        'category_name' => $subject->subcategory->category->name,
                         'priority' => $subject->priority,
                     ];
                 });

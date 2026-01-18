@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\FeedbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +26,17 @@ Route::prefix('v1')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{category}/subcategories', [CategoryController::class, 'subcategories']);
     Route::get('/subcategories/{subcategory}/subjects', [CategoryController::class, 'subjects']);
+    Route::get('/learning_scroll_subjects', [CategoryController::class, 'learningScrollSubjects']);
 });
+
+// Contact submission route
+Route::post('/contact', [ContactController::class, 'store']);
+
+// Feedback submission route
+Route::post('/feedback', [FeedbackController::class, 'store']);
+
+// Static pages route
+Route::get('/pages/{slug}', [StaticPageController::class, 'show']);
+
+// Direct subjects endpoint for welcome page
+Route::get('/subjects', [CategoryController::class, 'allSubjects']);
