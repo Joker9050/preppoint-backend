@@ -38,6 +38,7 @@ class CategoryController extends Controller
                             return [
                                 'id' => $subject->id,
                                 'name' => $subject->name,
+                                'icon_key' => $subject->icon_key,
                                 'subcategory_id' => $subject->subcategory_id,
                                 'subcategory_name' => $subcategory->name,
                                 'priority' => $subject->priority,
@@ -95,6 +96,7 @@ class CategoryController extends Controller
                             return [
                                 'id' => $subject->id,
                                 'name' => $subject->name,
+                                'icon_key' => $subject->icon_key,
                                 'subcategory_id' => $subject->subcategory_id,
                                 'subcategory_name' => $subcategory->name,
                                 'priority' => $subject->priority,
@@ -135,6 +137,7 @@ class CategoryController extends Controller
                     return [
                         'id' => $subject->id,
                         'name' => $subject->name,
+                        'icon_key' => $subject->icon_key,
                         'subcategory_id' => $subject->subcategory_id,
                         'subcategory_name' => $subcategory->name,
                         'category_id' => $subcategory->category_id,
@@ -166,7 +169,7 @@ class CategoryController extends Controller
     public function learningScrollSubjects(): JsonResponse
     {
         try {
-            $subjects = Subject::orderBy('priority', 'asc')->get(['id', 'name', 'priority']);
+            $subjects = Subject::orderBy('priority', 'asc')->get(['id', 'name', 'icon_key', 'priority']);
 
             return response()->json([
                 'success' => true,
@@ -198,6 +201,7 @@ class CategoryController extends Controller
                     return [
                         'id' => $subject->id,
                         'name' => $subject->name,
+                        'icon_key' => $subject->icon_key,
                         'subcategory_id' => $subject->subcategory_id,
                         'subcategory_name' => $subject->subcategory->name,
                         'category_id' => $subject->subcategory->category->id,

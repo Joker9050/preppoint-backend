@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\FeedbackController;
+use App\Http\Controllers\Api\McqController;
+use App\Http\Controllers\Api\HierarchyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,26 +19,25 @@ use App\Http\Controllers\Api\FeedbackController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 // Public API routes for frontend
 Route::prefix('v1')->group(function () {
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{category}/subcategories', [CategoryController::class, 'subcategories']);
     Route::get('/subcategories/{subcategory}/subjects', [CategoryController::class, 'subjects']);
     Route::get('/learning_scroll_subjects', [CategoryController::class, 'learningScrollSubjects']);
+
+    // Hierarchy API - separate from MCQs
+    Route::get('/hierarchy', [HierarchyController::class, 'index']);
+
+    // Optimized MCQ API - direct queries only
+    Route::get('/mcqs', [McqController::class, 'index']);
 });
 
-// Contact submission route
+// Admin API routes (protected)
+Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function () {
+    // Admin routes here
+});
+
+// Contact and feedback routes
 Route::post('/contact', [ContactController::class, 'store']);
-
-// Feedback submission route
 Route::post('/feedback', [FeedbackController::class, 'store']);
-
-// Static pages route
-Route::get('/pages/{slug}', [StaticPageController::class, 'show']);
-
-// Direct subjects endpoint for welcome page
-Route::get('/subjects', [CategoryController::class, 'allSubjects']);
