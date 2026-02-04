@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\McqController;
 use App\Http\Controllers\Api\HierarchyController;
+use App\Http\Controllers\Api\StaticPageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,10 @@ Route::prefix('v1')->group(function () {
 
     // Hierarchy API - separate from MCQs
     Route::get('/hierarchy', [HierarchyController::class, 'index']);
+
+    // Static Pages API
+    Route::get('/static-pages/{pageName}', [StaticPageController::class, 'show']);
+    Route::get('/static-pages', [StaticPageController::class, 'index']);
 
     // Optimized MCQ API - direct queries only
     Route::get('/mcqs', [McqController::class, 'index']);

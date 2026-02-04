@@ -10,15 +10,49 @@ use Illuminate\Http\JsonResponse;
 class StaticPageController extends Controller
 {
     /**
-     * Get a specific static page by slug
+     * Get all static pages
      *
-     * @param string $slug
      * @return JsonResponse
      */
-    public function show($slug): JsonResponse
+    public function index(): JsonResponse
     {
         try {
-            $page = StaticPage::findBySlug($slug);
+            $pages = StaticPage::orderBy('title')->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $pages->map(function ($page) {
+                    return [
+                        'id' => $page->id,
+                        'page_name' => $page->page_name,
+                        'title' => $page->title,
+                        'admin_id' => $page->admin_id,
+                        'updated_at' => $page->updated_at ? $page->updated_at->toDateTimeString() : null
+                    ];
+                }) // Fixed: Added closing parenthesis for map()
+            ]); // Fixed: Added closing bracket for response array
+
+        } catch (\Exception $e) {
+            \Log::error('Static pages fetch error: ' . $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while fetching pages. Please try again later.'
+            ], 500);
+        }
+    }
+
+    /**
+     * Get a specific static page by page_name
+     *
+     * @param string $pageName
+     * @return JsonResponse
+     */
+    public function show($pageName): JsonResponse
+    {
+        try {
+            // Fixed: Changed to use where() clause instead of potentially non-existent findByPageName()
+            $page = StaticPage::where('page_name', $pageName)->first();
 
             if (!$page) {
                 return response()->json([
@@ -31,18 +65,17 @@ class StaticPageController extends Controller
                 'success' => true,
                 'data' => [
                     'id' => $page->id,
-                    'slug' => $page->slug,
+                    'page_name' => $page->page_name,
                     'title' => $page->title,
                     'content' => $page->content,
-                    'is_active' => $page->is_active,
-                    'created_at' => $page->created_at->toISOString(),
-                    'updated_at' => $page->updated_at->toISOString()
+                    'admin_id' => $page->admin_id,
+                    'updated_at' => $page->updated_at ? $page->updated_at->toDateTimeString() : null
                 ]
             ]);
 
         } catch (\Exception $e) {
             \Log::error('Static page fetch error: ' . $e->getMessage(), [
-                'slug' => $slug
+                'page_name' => $pageName
             ]);
 
             return response()->json([

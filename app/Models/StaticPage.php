@@ -7,29 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class StaticPage extends Model
 {
     protected $fillable = [
-        'slug',
+        'page_name',
         'title',
         'content',
-        'is_active'
+        'admin_id'
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'admin_id' => 'integer',
     ];
 
     /**
-     * Scope for active pages
+     * Find page by page_name
      */
-    public function scopeActive($query)
+    public static function findByPageName($pageName)
     {
-        return $query->where('is_active', true);
-    }
-
-    /**
-     * Find page by slug
-     */
-    public static function findBySlug($slug)
-    {
-        return static::where('slug', $slug)->active()->first();
+        return static::where('page_name', $pageName)->first();
     }
 }

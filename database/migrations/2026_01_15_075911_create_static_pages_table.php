@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('static_pages', function (Blueprint $table) {
             $table->id();
-            $table->string('slug')->unique();
-            $table->string('title');
+            $table->string('page_name', 100)->unique();
+            $table->string('title', 255);
             $table->longText('content');
-            $table->boolean('is_active')->default(true);
+            $table->timestamp('last_updated')->useCurrent()->useCurrentOnUpdate();
+            $table->unsignedBigInteger('admin_id')->nullable();
             $table->timestamps();
         });
     }
