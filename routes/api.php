@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\McqController;
 use App\Http\Controllers\Api\HierarchyController;
 use App\Http\Controllers\Api\StaticPageController;
+use App\Http\Controllers\Api\MockExamController;
+use App\Http\Controllers\Api\MockQuestionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +38,11 @@ Route::prefix('v1')->group(function () {
 
     // Optimized MCQ API - direct queries only
     Route::get('/mcqs', [McqController::class, 'index']);
+
+    // Mock Test APIs
+    Route::get('/exams', [MockExamController::class, 'index']);
+    Route::get('/exams/{examSlug}/papers', [MockExamController::class, 'getPapers']);
+    Route::post('/questions/{questionId}/check', [MockQuestionController::class, 'checkAnswer']);
 });
 
 // Admin API routes (protected)

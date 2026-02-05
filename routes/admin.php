@@ -6,7 +6,8 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\McqController;
-use App\Http\Controllers\Admin\MockTestController;
+use App\Http\Controllers\Admin\MockExamController;
+use App\Http\Controllers\Admin\MockExamPaperController;
 use App\Http\Controllers\Admin\JobUpdateController;
 use App\Http\Controllers\Admin\ScrapedDraftController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -46,11 +47,22 @@ Route::middleware(['admin.auth'])->group(function () {
     Route::get('mcqs/{mcq}/preview', [McqController::class, 'preview'])->name('admin.mcqs.preview');
     Route::get('mcqs/get-subtopics/{topic}', [McqController::class, 'getSubtopics'])->name('admin.mcqs.get-subtopics');
 
-    // Mock Test Management Routes
-    Route::resource('mock-tests', MockTestController::class, ['as' => 'admin']);
-    Route::patch('mock-tests/{mock_test}/toggle-status', [MockTestController::class, 'toggleStatus'])->name('admin.mock-tests.toggle-status');
-    Route::get('mock-tests/get-topics/{subject}', [MockTestController::class, 'getTopics'])->name('admin.mock-tests.get-topics');
-    Route::post('mock-tests/get-mcqs', [MockTestController::class, 'getMcqs'])->name('admin.mock-tests.get-mcqs');
+
+
+    // Mock Exam Management Routes
+    Route::resource('mock-exams', MockExamController::class, ['as' => 'admin']);
+    Route::patch('mock-exams/{mock_exam}/toggle-status', [MockExamController::class, 'toggleStatus'])->name('admin.mock-exams.toggle-status');
+
+    // Mock Exam Paper Management Routes
+    Route::resource('mock-exam-papers', MockExamPaperController::class, ['as' => 'admin']);
+    Route::patch('mock-exam-papers/{mock_exam_paper}/toggle-status', [MockExamPaperController::class, 'toggleStatus'])->name('admin.mock-exam-papers.toggle-status');
+    Route::get('mock-exam-papers/{mock_exam_paper}/sections', [MockExamPaperController::class, 'sections'])->name('admin.mock-exam-papers.sections');
+    Route::get('mock-exam-papers/{mock_exam_paper}/sections/create', [MockExamPaperController::class, 'createSection'])->name('admin.mock-exam-papers.sections.create');
+    Route::post('mock-exam-papers/{mock_exam_paper}/sections', [MockExamPaperController::class, 'storeSection'])->name('admin.mock-exam-papers.sections.store');
+    Route::get('mock-exam-papers/{mock_exam_paper}/preview', [MockExamPaperController::class, 'preview'])->name('admin.mock-exam-papers.preview');
+    Route::get('question-bank', [MockExamPaperController::class, 'questionBank'])->name('admin.question-bank');
+    Route::get('get-topics/{subject}', [MockExamPaperController::class, 'getTopics'])->name('admin.get-topics');
+    Route::get('get-subtopics/{topic}', [MockExamPaperController::class, 'getSubtopics'])->name('admin.get-subtopics');
 
     // Job Updates Management Routes
     Route::resource('job-updates', JobUpdateController::class, ['as' => 'admin']);

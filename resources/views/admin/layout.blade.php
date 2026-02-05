@@ -57,7 +57,7 @@
                 </a>
 
                 <!-- Mock Tests -->
-                <a href="{{ route('admin.mock-tests.index') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.mock-tests.*') ? 'bg-indigo-700 text-white' : '' }}">
+                <a href="{{ route('admin.mock-exams.index') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.mock-exams.*') ? 'bg-indigo-700 text-white' : '' }}">
                     <i class="fas fa-clipboard-list mr-3"></i>
                     <span>Mock Tests</span>
                 </a>
