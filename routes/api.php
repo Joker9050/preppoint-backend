@@ -42,6 +42,7 @@ Route::prefix('v1')->group(function () {
     // Mock Test APIs
     Route::get('/exams', [MockExamController::class, 'index']);
     Route::get('/exams/{examSlug}/papers', [MockExamController::class, 'getPapers']);
+    Route::get('/popular-papers', [MockExamController::class, 'getPopularPapers']);
     Route::post('/questions/{questionId}/check', [MockQuestionController::class, 'checkAnswer']);
 });
 

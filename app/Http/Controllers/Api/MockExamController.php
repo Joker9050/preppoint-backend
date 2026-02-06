@@ -77,4 +77,69 @@ class MockExamController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * GET /api/popular-papers
+     * Fetch popular papers for homepage display
+     */
+    public function getPopularPapers(): JsonResponse
+    {
+        try {
+            // First, let's check if there are any papers at all
+            $totalPapers = MockExamPaper::count();
+
+            if ($totalPapers === 0) {
+                // Return empty array if no papers exist
+                return response()->json([
+                    'success' => true,
+                    'data' => [],
+                    'message' => 'No papers available'
+                ]);
+            }
+
+            $papers = MockExamPaper::with('exam:id,name,category,mode')
+                ->select(
+                    'id',
+                    'exam_id',
+                    'title',
+                    'paper_type',
+                    'year',
+                    'shift',
+                    'total_questions',
+                    'duration_minutes',
+                    'difficulty_level'
+                )
+                ->orderBy('year', 'desc')
+                ->orderBy('created_at', 'desc')
+                ->limit(20) // Limit for homepage
+                ->get()
+                ->map(function ($paper) {
+                    return [
+                        'id' => $paper->id,
+                        'name' => $paper->title ?: 'Untitled Paper',
+                        'exam_name' => $paper->exam->name ?? 'Unknown Exam',
+                        'category' => $paper->exam->category ?? 'Unknown',
+                        'mode' => $paper->exam->mode ?? 'Online',
+                        'paper_type' => $paper->paper_type ?: 'General',
+                        'year' => $paper->year ?: date('Y'),
+                        'shift' => $paper->shift ?: 'General',
+                        'total_questions' => $paper->total_questions ?: 0,
+                        'duration_minutes' => $paper->duration_minutes ?: 60,
+                        'difficulty_level' => $paper->difficulty_level ?: 'Medium',
+                    ];
+                });
+
+            return response()->json([
+                'success' => true,
+                'data' => $papers,
+                'total' => $totalPapers
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Popular papers API error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to fetch popular papers: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
