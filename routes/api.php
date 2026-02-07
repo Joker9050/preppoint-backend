@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ContactController;
 use App\Http\Controllers\Api\FeedbackController;
@@ -24,6 +25,13 @@ use App\Http\Controllers\Api\MockQuestionController;
 
 // Public API routes for frontend
 Route::prefix('v1')->group(function () {
+    // Auth APIs
+    Route::prefix('auth')->group(function () {
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/google', [AuthController::class, 'google']);
+    });
+
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{category}/subcategories', [CategoryController::class, 'subcategories']);
     Route::get('/subcategories/{subcategory}/subjects', [CategoryController::class, 'subjects']);

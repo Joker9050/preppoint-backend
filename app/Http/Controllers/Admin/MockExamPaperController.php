@@ -240,10 +240,100 @@ class MockExamPaperController extends Controller
         return response()->json($subtopics);
     }
 
+    // Section Questions Management
+    public function sectionQuestions(MockExamPaper $mockExamPaper, MockPaperSection $section)
+    {
+        $questions = $section->questions()->with('question.options')->paginate(20);
+        return view('admin.mock-exam-papers.sections.questions.index', compact('mockExamPaper', 'section', 'questions'));
+    }
+
+    public function addQuestionsToSection(MockExamPaper $mockExamPaper, MockPaperSection $section)
+    {
+        $query = MockQuestion::with(['subject', 'topic', 'subtopic']);
+
+        // Filter by subject
+        if (request('subject_id')) {
+            $query->where('subject_id', request('subject_id'));
+        }
+
+        // Filter by topic
+        if (request('topic_id')) {
+            $query->where('topic_id', request('topic_id'));
+        }
+
+        // Filter by subtopic
+        if (request('subtopic_id')) {
+            $query->where('subtopic_id', request('subtopic_id'));
+        }
+
+        // Filter by difficulty
+        if (request('difficulty_level')) {
+            $query->where('difficulty_level', request('difficulty_level'));
+        }
+
+        // Exclude questions already in this section
+        $existingQuestionIds = $section->questions()->pluck('question_id')->toArray();
+        $query->whereNotIn('id', $existingQuestionIds);
+
+        $questions = $query->paginate(20);
+        $subjects = MockSubject::where('status', true)->get();
+
+        return view('admin.mock-exam-papers.sections.questions.add', compact('mockExamPaper', 'section', 'questions', 'subjects'));
+    }
+
+    public function storeQuestionsToSection(Request $request, MockExamPaper $mockExamPaper, MockPaperSection $section)
+    {
+        $request->validate([
+            'question_ids' => 'required|array',
+            'question_ids.*' => 'exists:mock_questions,id',
+            'marks' => 'nullable|array',
+            'marks.*' => 'numeric|min:0',
+            'negative_marks' => 'nullable|array',
+            'negative_marks.*' => 'numeric|min:0',
+        ]);
+
+        $questionIds = $request->question_ids;
+        $marks = $request->marks ?? [];
+        $negativeMarks = $request->negative_marks ?? [];
+
+        // Check if adding these questions would exceed section total
+        $currentCount = $section->questions()->count();
+        if ($currentCount + count($questionIds) > $section->total_questions) {
+            return redirect()->back()
+                ->with('error', 'Cannot add these questions. Section would exceed total questions limit (' . $section->total_questions . ').');
+        }
+
+        foreach ($questionIds as $questionId) {
+            MockPaperQuestion::create([
+                'paper_id' => $mockExamPaper->id,
+                'section_id' => $section->id,
+                'question_id' => $questionId,
+                'marks' => $marks[$questionId] ?? $section->positive_marks,
+                'negative_marks' => $negativeMarks[$questionId] ?? $section->negative_marks,
+            ]);
+        }
+
+        return redirect()->route('admin.mock-exam-papers.sections.questions', [$mockExamPaper, $section])
+            ->with('success', count($questionIds) . ' questions added to section successfully.');
+    }
+
+    public function removeQuestionFromSection(MockExamPaper $mockExamPaper, MockPaperSection $section, MockPaperQuestion $question)
+    {
+        // Ensure the question belongs to this section
+        if ($question->section_id !== $section->id) {
+            return redirect()->back()->with('error', 'Question does not belong to this section.');
+        }
+
+        $question->delete();
+
+        return redirect()->back()
+            ->with('success', 'Question removed from section successfully.');
+    }
+
     // Preview functionality
     public function preview(MockExamPaper $mockExamPaper)
     {
-        $mockExamPaper->load(['exam', 'sections.paperQuestions.question.options']);
+        $mockExamPaper->load(['exam', 'sections.questions.question.options']);
         return view('admin.mock-exam-papers.preview', compact('mockExamPaper'));
     }
 }

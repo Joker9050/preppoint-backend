@@ -59,6 +59,11 @@ Route::middleware(['admin.auth'])->group(function () {
     Route::get('mock-exam-papers/{mock_exam_paper}/sections', [MockExamPaperController::class, 'sections'])->name('admin.mock-exam-papers.sections');
     Route::get('mock-exam-papers/{mock_exam_paper}/sections/create', [MockExamPaperController::class, 'createSection'])->name('admin.mock-exam-papers.sections.create');
     Route::post('mock-exam-papers/{mock_exam_paper}/sections', [MockExamPaperController::class, 'storeSection'])->name('admin.mock-exam-papers.sections.store');
+    Route::get('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions', [MockExamPaperController::class, 'sectionQuestions'])->name('admin.mock-exam-papers.sections.questions');
+    Route::get('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions/add', [MockExamPaperController::class, 'addQuestionsToSection'])->name('admin.mock-exam-papers.sections.questions.add');
+    Route::post('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions', [MockExamPaperController::class, 'storeQuestionsToSection'])->name('admin.mock-exam-papers.sections.questions.store');
+    Route::post('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions/create', [MockExamPaperController::class, 'createQuestion'])->name('admin.mock-exam-papers.sections.questions.create');
+    Route::delete('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions/{question}', [MockExamPaperController::class, 'removeQuestionFromSection'])->name('admin.mock-exam-papers.sections.questions.destroy');
     Route::get('mock-exam-papers/{mock_exam_paper}/preview', [MockExamPaperController::class, 'preview'])->name('admin.mock-exam-papers.preview');
     Route::get('question-bank', [MockExamPaperController::class, 'questionBank'])->name('admin.question-bank');
     Route::get('get-topics/{subject}', [MockExamPaperController::class, 'getTopics'])->name('admin.get-topics');

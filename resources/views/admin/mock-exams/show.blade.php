@@ -113,7 +113,7 @@
                                     </div>
                                     <div>
                                         <h4 class="text-sm font-medium text-gray-900">{{ $paper->name }}</h4>
-                                        <p class="text-sm text-gray-500">{{ $paper->questions_count ?? 0 }} questions • {{ $paper->duration ?? 0 }} minutes</p>
+                                        <p class="text-sm text-gray-500">{{ $paper->total_questions ?? 0 }} questions • {{ $paper->duration_minutes ?? 0 }} minutes</p>
                                     </div>
                                 </div>
                                 <div class="flex items-center space-x-2">
