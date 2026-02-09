@@ -8,6 +8,9 @@ use App\Http\Controllers\Admin\TopicController;
 use App\Http\Controllers\Admin\McqController;
 use App\Http\Controllers\Admin\MockExamController;
 use App\Http\Controllers\Admin\MockExamPaperController;
+use App\Http\Controllers\Admin\MockSubjectController;
+use App\Http\Controllers\Admin\MockTopicController;
+use App\Http\Controllers\Admin\MockSubtopicController;
 use App\Http\Controllers\Admin\JobUpdateController;
 use App\Http\Controllers\Admin\ScrapedDraftController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -48,6 +51,15 @@ Route::middleware(['admin.auth'])->group(function () {
     Route::get('mcqs/get-subtopics/{topic}', [McqController::class, 'getSubtopics'])->name('admin.mcqs.get-subtopics');
 
 
+
+    // Mock Content Management Routes
+    Route::resource('mock-subjects', MockSubjectController::class, ['as' => 'admin']);
+    Route::patch('mock-subjects/{mock_subject}/toggle-status', [MockSubjectController::class, 'toggleStatus'])->name('admin.mock-subjects.toggle-status');
+
+    Route::resource('mock-topics', MockTopicController::class, ['as' => 'admin']);
+    Route::patch('mock-topics/{mock_topic}/toggle-status', [MockTopicController::class, 'toggleStatus'])->name('admin.mock-topics.toggle-status');
+
+    Route::resource('mock-subtopics', MockSubtopicController::class, ['as' => 'admin']);
 
     // Mock Exam Management Routes
     Route::resource('mock-exams', MockExamController::class, ['as' => 'admin']);

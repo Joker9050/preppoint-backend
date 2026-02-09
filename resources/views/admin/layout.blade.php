@@ -20,14 +20,14 @@
     <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden" onclick="toggleSidebar()"></div>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-indigo-800 to-indigo-900 text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shadow-xl">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-indigo-800 to-indigo-900 text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shadow-xl flex flex-col">
         <!-- Logo/Brand -->
-        <div class="flex items-center justify-center h-16 bg-indigo-900 border-b border-indigo-700">
+        <div class="flex items-center justify-center h-16 bg-indigo-900 border-b border-indigo-700 flex-shrink-0">
             <h1 class="text-xl font-bold text-white">PrepPoint Admin</h1>
         </div>
 
         <!-- Navigation -->
-        <nav class="mt-8 px-4">
+        <nav class="mt-8 px-4 flex-1 overflow-y-auto">
             <!-- Dashboard -->
             <a href="{{ route('admin.dashboard') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-2 {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-700 text-white' : '' }}">
                 <i class="fas fa-tachometer-alt mr-3"></i>
@@ -55,6 +55,35 @@
                     <i class="fas fa-question-circle mr-3"></i>
                     <span>MCQs</span>
                 </a>
+
+                <!-- Mock Content Management -->
+                <div class="mb-1">
+                    <h4 class="px-4 py-2 text-xs font-semibold text-indigo-400 uppercase tracking-wider">Mock Content</h4>
+
+                    <!-- Mock Subjects -->
+                    <a href="{{ route('admin.mock-subjects.index') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.mock-subjects.*') ? 'bg-indigo-700 text-white' : '' }}">
+                        <i class="fas fa-book mr-3"></i>
+                        <span>Subjects</span>
+                    </a>
+
+                    <!-- Mock Topics -->
+                    <a href="{{ route('admin.mock-topics.index') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.mock-topics.*') ? 'bg-indigo-700 text-white' : '' }}">
+                        <i class="fas fa-tags mr-3"></i>
+                        <span>Topics</span>
+                    </a>
+
+                    <!-- Mock Subtopics -->
+                    <a href="{{ route('admin.mock-subtopics.index') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.mock-subtopics.*') ? 'bg-indigo-700 text-white' : '' }}">
+                        <i class="fas fa-list mr-3"></i>
+                        <span>Subtopics</span>
+                    </a>
+
+                    <!-- Question Bank -->
+                    <a href="{{ route('admin.question-bank') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.question-bank') ? 'bg-indigo-700 text-white' : '' }}">
+                        <i class="fas fa-question-circle mr-3"></i>
+                        <span>Question Bank</span>
+                    </a>
+                </div>
 
                 <!-- Mock Tests Dropdown -->
                 <div class="mb-1">

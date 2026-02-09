@@ -15,7 +15,7 @@
                     </p>
                 </div>
                 <div class="flex items-center space-x-3">
-                    <a href="{{ route('admin.mock-exam-papers.sections.questions', [$mockExamPaper, $section]) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <a href="{{ route('admin.mock-exam-papers.sections.questions.index', [$mockExamPaper, $section]) }}" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                         <i class="fas fa-arrow-left mr-2"></i>
                         Back to Section
                     </a>
@@ -96,7 +96,7 @@
 
                 <div>
                     <label for="topic_id" class="block text-sm font-medium text-gray-700">Topic</label>
-                    <select id="topic_id" name="topic_id" onchange="this.form.submit()" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <select id="topic_id" name="topic_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="">All Topics</option>
                         @if(request('subject_id'))
                             @php
@@ -111,7 +111,7 @@
 
                 <div>
                     <label for="subtopic_id" class="block text-sm font-medium text-gray-700">Subtopic</label>
-                    <select id="subtopic_id" name="subtopic_id" onchange="this.form.submit()" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <select id="subtopic_id" name="subtopic_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                         <option value="">All Subtopics</option>
                         @if(request('topic_id'))
                             @php
@@ -250,6 +250,73 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     updateSelectedCount();
+});
+
+// AJAX functions for dynamic dropdowns
+function loadTopics() {
+    const subjectId = document.getElementById('subject_id').value;
+    const topicSelect = document.getElementById('topic_id');
+    const subtopicSelect = document.getElementById('subtopic_id');
+
+    // Clear existing options
+    topicSelect.innerHTML = '<option value="">All Topics</option>';
+    subtopicSelect.innerHTML = '<option value="">All Subtopics</option>';
+
+    if (subjectId) {
+        fetch(`/admin/get-topics/${subjectId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(topic => {
+                    const option = document.createElement('option');
+                    option.value = topic.id;
+                    option.textContent = topic.name;
+                    topicSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading topics:', error));
+    }
+}
+
+function loadSubtopics() {
+    const topicId = document.getElementById('topic_id').value;
+    const subtopicSelect = document.getElementById('subtopic_id');
+
+    // Clear existing options
+    subtopicSelect.innerHTML = '<option value="">All Subtopics</option>';
+
+    if (topicId) {
+        fetch(`/admin/get-subtopics/${topicId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(subtopic => {
+                    const option = document.createElement('option');
+                    option.value = subtopic.id;
+                    option.textContent = subtopic.name;
+                    subtopicSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error loading subtopics:', error));
+    }
+}
+
+// Auto-submit form when filters change
+document.getElementById('subject_id').addEventListener('change', function() {
+    document.getElementById('topic_id').value = '';
+    document.getElementById('subtopic_id').value = '';
+    this.form.submit();
+});
+
+document.getElementById('topic_id').addEventListener('change', function() {
+    document.getElementById('subtopic_id').value = '';
+    this.form.submit();
+});
+
+document.getElementById('subtopic_id').addEventListener('change', function() {
+    this.form.submit();
+});
+
+document.getElementById('difficulty_level').addEventListener('change', function() {
+    this.form.submit();
 });
 </script>
 @endsection
