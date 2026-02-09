@@ -18,7 +18,8 @@ class MockQuestion extends Model
         'question_text',
         'question_type',
         'difficulty_level',
-        'explanation'
+        'explanation',
+        'question_image'
     ];
 
     public function subject()

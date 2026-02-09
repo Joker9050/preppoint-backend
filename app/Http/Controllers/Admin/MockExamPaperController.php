@@ -197,6 +197,59 @@ class MockExamPaperController extends Controller
             ->with('success', 'Section created successfully.');
     }
 
+    public function editSection(MockExamPaper $mockExamPaper, MockPaperSection $section)
+    {
+        return view('admin.mock-exam-papers.sections.edit', compact('mockExamPaper', 'section'));
+    }
+
+    public function updateSection(Request $request, MockExamPaper $mockExamPaper, MockPaperSection $section)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:100',
+            'total_questions' => 'required|integer|min:1',
+            'section_marks' => 'required|integer|min:1',
+            'section_time_minutes' => 'nullable|integer|min:1',
+            'sequence_no' => 'required|integer|min:1',
+            'positive_marks' => 'required|numeric|min:0',
+            'negative_marks' => 'required|numeric|min:0',
+            'instructions' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $section->update([
+            'name' => $request->name,
+            'total_questions' => $request->total_questions,
+            'section_marks' => $request->section_marks,
+            'section_time_minutes' => $request->section_time_minutes,
+            'sequence_no' => $request->sequence_no,
+            'positive_marks' => $request->positive_marks,
+            'negative_marks' => $request->negative_marks,
+            'instructions' => $request->instructions,
+        ]);
+
+        return redirect()->route('admin.mock-exam-papers.sections', $mockExamPaper)
+            ->with('success', 'Section updated successfully.');
+    }
+
+    public function destroySection(MockExamPaper $mockExamPaper, MockPaperSection $section)
+    {
+        // Check if section has questions
+        if ($section->questions()->count() > 0) {
+            return redirect()->back()
+                ->with('error', 'Cannot delete section with existing questions.');
+        }
+
+        $section->delete();
+
+        return redirect()->route('admin.mock-exam-papers.sections', $mockExamPaper)
+            ->with('success', 'Section deleted successfully.');
+    }
+
     // Question Bank Integration
     public function questionBank(Request $request)
     {
@@ -228,15 +281,15 @@ class MockExamPaperController extends Controller
         return view('admin.mock-exam-papers.question-bank', compact('questions', 'subjects'));
     }
 
-    public function getTopics(Request $request)
+    public function getTopics($subjectId)
     {
-        $topics = MockTopic::where('subject_id', $request->subject_id)->get();
+        $topics = MockTopic::where('subject_id', $subjectId)->get(['id', 'name']);
         return response()->json($topics);
     }
 
-    public function getSubtopics(Request $request)
+    public function getSubtopics($topicId)
     {
-        $subtopics = MockSubtopic::where('topic_id', $request->topic_id)->get();
+        $subtopics = MockSubtopic::where('topic_id', $topicId)->get(['id', 'name']);
         return response()->json($subtopics);
     }
 
@@ -315,6 +368,95 @@ class MockExamPaperController extends Controller
 
         return redirect()->route('admin.mock-exam-papers.sections.questions', [$mockExamPaper, $section])
             ->with('success', count($questionIds) . ' questions added to section successfully.');
+    }
+
+    public function createQuestionPage(Request $request)
+    {
+        $subjects = MockSubject::where('status', true)->get();
+        $returnUrl = $request->get('return_url', route('admin.question-bank'));
+
+        return view('admin.questions.create', compact('subjects', 'returnUrl'));
+    }
+
+    public function storeQuestion(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'subject_id' => 'required|exists:mock_subjects,id',
+            'topic_id' => 'required|exists:mock_topics,id',
+            'subtopic_id' => 'nullable|exists:mock_subtopics,id',
+            'question_type' => 'required|in:mcq,numeric',
+            'difficulty_level' => 'required|in:easy,moderate,hard',
+            'question_text' => 'required|string',
+            'question_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'options' => 'required_if:question_type,mcq|array|min:2',
+            'options.*' => 'required_if:question_type,mcq|string',
+            'correct_option' => 'required_if:question_type,mcq|string|in:A,B,C,D,E,F,G,H',
+            'numeric_answer' => 'required_if:question_type,numeric|numeric',
+            'explanation' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        DB::beginTransaction();
+        try {
+            // Handle image upload
+            $imagePath = null;
+            if ($request->hasFile('question_image')) {
+                $imagePath = $request->file('question_image')->store('mock-questions', 'public');
+            }
+
+            // Create the question
+            $question = MockQuestion::create([
+                'subject_id' => $request->subject_id,
+                'topic_id' => $request->topic_id,
+                'subtopic_id' => $request->subtopic_id,
+                'question_text' => $request->question_text,
+                'question_type' => $request->question_type,
+                'difficulty_level' => $request->difficulty_level,
+                'question_image' => $imagePath,
+                'explanation' => $request->explanation,
+            ]);
+
+            // Create options for MCQ
+            if ($request->question_type === 'mcq') {
+                foreach ($request->options as $key => $optionText) {
+                    $isCorrect = ($request->correct_option === $key);
+                    MockQuestionOption::create([
+                        'question_id' => $question->id,
+                        'option_text' => $optionText,
+                        'is_correct' => $isCorrect,
+                        'option_key' => $key,
+                    ]);
+                }
+            } else {
+                // For numeric questions, store the answer in options table
+                MockQuestionOption::create([
+                    'question_id' => $question->id,
+                    'option_text' => (string) $request->numeric_answer,
+                    'is_correct' => true,
+                    'option_key' => 'NUMERIC',
+                ]);
+            }
+
+            DB::commit();
+
+            $returnUrl = $request->get('return_url', route('admin.question-bank'));
+
+            return redirect($returnUrl)
+                ->with('success', 'Question created successfully.');
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            \Log::error('Question creation failed: ' . $e->getMessage());
+
+            return redirect()->back()
+                ->with('error', 'Failed to create question. Please try again.')
+                ->withInput();
+        }
     }
 
     public function removeQuestionFromSection(MockExamPaper $mockExamPaper, MockPaperSection $section, MockPaperQuestion $question)

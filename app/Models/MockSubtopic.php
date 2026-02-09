@@ -14,7 +14,8 @@ class MockSubtopic extends Model
     protected $fillable = [
         'topic_id',
         'name',
-        'slug'
+        'slug',
+        'status'
     ];
 
     public function topic()

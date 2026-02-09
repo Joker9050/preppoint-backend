@@ -56,11 +56,28 @@
                     <span>MCQs</span>
                 </a>
 
-                <!-- Mock Tests -->
-                <a href="{{ route('admin.mock-exams.index') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.mock-exams.*') ? 'bg-indigo-700 text-white' : '' }}">
-                    <i class="fas fa-clipboard-list mr-3"></i>
-                    <span>Mock Tests</span>
-                </a>
+                <!-- Mock Tests Dropdown -->
+                <div class="mb-1">
+                    <button onclick="toggleMockDropdown()" class="flex items-center justify-between w-full py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.mock-exams.*') || request()->routeIs('admin.mock-exam-papers.*') ? 'bg-indigo-700 text-white' : '' }}">
+                        <div class="flex items-center">
+                            <i class="fas fa-clipboard-list mr-3"></i>
+                            <span>Mock Tests</span>
+                        </div>
+                        <i class="fas fa-chevron-down transition-transform duration-200" id="mock-chevron"></i>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    <div class="hidden ml-4 mt-1 space-y-1" id="mock-dropdown">
+                        <a href="{{ route('admin.mock-exams.index') }}" class="flex items-center py-2 px-4 text-indigo-200 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.mock-exams.*') ? 'bg-indigo-700 text-white' : '' }}">
+                            <i class="fas fa-list mr-3"></i>
+                            <span>Mock Exams</span>
+                        </a>
+                        <a href="{{ route('admin.mock-exam-papers.index') }}" class="flex items-center py-2 px-4 text-indigo-200 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 {{ request()->routeIs('admin.mock-exam-papers.*') ? 'bg-indigo-700 text-white' : '' }}">
+                            <i class="fas fa-file-alt mr-3"></i>
+                            <span>Mock Exam Papers</span>
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <!-- Job Management -->
@@ -194,6 +211,15 @@
         function toggleUserDropdown() {
             const dropdown = document.getElementById('user-dropdown');
             dropdown.classList.toggle('hidden');
+        }
+
+        // Mock Tests dropdown toggle
+        function toggleMockDropdown() {
+            const dropdown = document.getElementById('mock-dropdown');
+            const chevron = document.getElementById('mock-chevron');
+
+            dropdown.classList.toggle('hidden');
+            chevron.classList.toggle('rotate-180');
         }
 
         // Initialize sidebar state on load

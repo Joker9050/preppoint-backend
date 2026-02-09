@@ -152,10 +152,16 @@
         <div class="px-6 py-4 border-b border-gray-200">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-medium text-gray-900">Paper Sections</h3>
-                <a href="{{ route('admin.mock-exam-papers.sections.create', $mockExamPaper) }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <i class="fas fa-plus mr-2"></i>
-                    Add Section
-                </a>
+                <div class="flex items-center space-x-3">
+                    <a href="{{ route('admin.mock-exam-papers.sections', $mockExamPaper) }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-blue-600 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <i class="fas fa-cogs mr-2"></i>
+                        Manage Sections
+                    </a>
+                    <a href="{{ route('admin.mock-exam-papers.sections.create', $mockExamPaper) }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <i class="fas fa-plus mr-2"></i>
+                        Add Section
+                    </a>
+                </div>
             </div>
         </div>
         <div class="px-6 py-4">
@@ -187,9 +193,13 @@
                                     @endif
                                 </div>
                                 <div class="flex items-center space-x-2 ml-4">
-                                    <a href="{{ route('admin.mock-exam-papers.sections.questions', [$mockExamPaper, $section]) }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <a href="{{ route('admin.mock-exam-papers.sections.questions.index', [$mockExamPaper, $section]) }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                         <i class="fas fa-list mr-2"></i>
                                         Manage Questions
+                                    </a>
+                                    <a href="{{ route('admin.mock-exam-papers.sections.questions.add', [$mockExamPaper, $section]) }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-green-600 bg-green-50 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                        <i class="fas fa-plus mr-2"></i>
+                                        Add Questions
                                     </a>
                                 </div>
                             </div>

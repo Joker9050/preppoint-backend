@@ -59,16 +59,23 @@ Route::middleware(['admin.auth'])->group(function () {
     Route::get('mock-exam-papers/{mock_exam_paper}/sections', [MockExamPaperController::class, 'sections'])->name('admin.mock-exam-papers.sections');
     Route::get('mock-exam-papers/{mock_exam_paper}/sections/create', [MockExamPaperController::class, 'createSection'])->name('admin.mock-exam-papers.sections.create');
     Route::post('mock-exam-papers/{mock_exam_paper}/sections', [MockExamPaperController::class, 'storeSection'])->name('admin.mock-exam-papers.sections.store');
-    Route::get('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions', [MockExamPaperController::class, 'sectionQuestions'])->name('admin.mock-exam-papers.sections.questions');
+    Route::get('mock-exam-papers/{mock_exam_paper}/sections/{section}/edit', [MockExamPaperController::class, 'editSection'])->name('admin.mock-exam-papers.sections.edit');
+    Route::patch('mock-exam-papers/{mock_exam_paper}/sections/{section}', [MockExamPaperController::class, 'updateSection'])->name('admin.mock-exam-papers.sections.update');
+    Route::delete('mock-exam-papers/{mock_exam_paper}/sections/{section}', [MockExamPaperController::class, 'destroySection'])->name('admin.mock-exam-papers.sections.destroy');
+    Route::get('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions', [MockExamPaperController::class, 'sectionQuestions'])->name('admin.mock-exam-papers.sections.questions.index');
     Route::get('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions/add', [MockExamPaperController::class, 'addQuestionsToSection'])->name('admin.mock-exam-papers.sections.questions.add');
     Route::post('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions', [MockExamPaperController::class, 'storeQuestionsToSection'])->name('admin.mock-exam-papers.sections.questions.store');
     Route::post('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions/create', [MockExamPaperController::class, 'createQuestion'])->name('admin.mock-exam-papers.sections.questions.create');
     Route::delete('mock-exam-papers/{mock_exam_paper}/sections/{section}/questions/{question}', [MockExamPaperController::class, 'removeQuestionFromSection'])->name('admin.mock-exam-papers.sections.questions.destroy');
     Route::get('mock-exam-papers/{mock_exam_paper}/preview', [MockExamPaperController::class, 'preview'])->name('admin.mock-exam-papers.preview');
     Route::get('question-bank', [MockExamPaperController::class, 'questionBank'])->name('admin.question-bank');
-    Route::get('get-topics/{subject}', [MockExamPaperController::class, 'getTopics'])->name('admin.get-topics');
-    Route::get('get-subtopics/{topic}', [MockExamPaperController::class, 'getSubtopics'])->name('admin.get-subtopics');
+    Route::get('get-topics/{subjectId}', [MockExamPaperController::class, 'getTopics'])->name('admin.get-topics');
+    Route::get('get-subtopics/{topicId}', [MockExamPaperController::class, 'getSubtopics'])->name('admin.get-subtopics');
 
+    // Question Management Routes
+    Route::get('/questions/create', [MockExamPaperController::class, 'createQuestionPage'])->name('admin.questions.create');
+    Route::post('/questions/store', [MockExamPaperController::class, 'storeQuestion'])->name('admin.questions.store');
+    
     // Job Updates Management Routes
     Route::resource('job-updates', JobUpdateController::class, ['as' => 'admin']);
     Route::patch('job-updates/{job_update}/toggle-status', [JobUpdateController::class, 'toggleStatus'])->name('admin.job-updates.toggle-status');

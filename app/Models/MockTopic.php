@@ -14,7 +14,8 @@ class MockTopic extends Model
     protected $fillable = [
         'subject_id',
         'name',
-        'slug'
+        'slug',
+        'status'
     ];
 
     public function subject()
