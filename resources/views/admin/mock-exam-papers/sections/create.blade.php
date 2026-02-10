@@ -86,7 +86,7 @@
 
                 <div>
                     <label for="negative_marks" class="block text-sm font-medium text-gray-700 mb-2">Negative Marks <span class="text-red-500">*</span></label>
-                    <input type="number" id="negative_marks" name="negative_marks" required min="0" step="0.5" class="block w-full border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors duration-200" placeholder="0.5">
+                    <input type="number" id="negative_marks" name="negative_marks" value="{{ old('negative_marks') }}" required min="0" step="0.5" class="block w-full px-3 py-2 border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors duration-200 @error('negative_marks') border-red-500 @enderror" placeholder="0.5">
                     @error('negative_marks')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

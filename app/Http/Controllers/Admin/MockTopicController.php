@@ -109,10 +109,10 @@ class MockTopicController extends Controller
 
     public function toggleStatus(MockTopic $mockTopic)
     {
-        $newStatus = $mockTopic->status === 'active' ? 'inactive' : 'active';
+        $newStatus = $mockTopic->status == 1 ? 0 : 1;
         $mockTopic->update(['status' => $newStatus]);
 
         return redirect()->back()
-            ->with('success', 'Topic status updated to ' . $newStatus);
+            ->with('success', 'Topic status updated to ' . ($newStatus == 1 ? 'Active' : 'Inactive'));
     }
 }

@@ -12,7 +12,7 @@ class MockSubtopicController extends Controller
 {
     public function index()
     {
-        $subtopics = MockSubtopic::with(['topic.subject'])->orderBy('name')->paginate(15);
+        $subtopics = MockSubtopic::with(['topic.subject', 'questions'])->orderBy('name')->paginate(15);
         return view('admin.mock-subtopics.index', compact('subtopics'));
     }
 

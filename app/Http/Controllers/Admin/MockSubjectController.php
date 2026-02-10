@@ -94,10 +94,10 @@ class MockSubjectController extends Controller
 
     public function toggleStatus(MockSubject $mockSubject)
     {
-        $newStatus = $mockSubject->status === 'active' ? 'inactive' : 'active';
+        $newStatus = $mockSubject->status == 1 ? 0 : 1;
         $mockSubject->update(['status' => $newStatus]);
 
         return redirect()->back()
-            ->with('success', 'Subject status updated to ' . $newStatus);
+            ->with('success', 'Subject status updated to ' . ($newStatus == 1 ? 'Active' : 'Inactive'));
     }
 }
