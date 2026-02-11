@@ -31,7 +31,7 @@ class CategoryManagementController extends Controller
 
         Category::create([
             'name' => $request->name,
-            'admin_id' => Auth::guard('admin')->id(),
+            'admin_id' => Auth::guard('admin')->user()->id,
         ]);
 
         return redirect()->route('admin.category-management.index')->with('success', 'Category created successfully.');
@@ -56,13 +56,13 @@ class CategoryManagementController extends Controller
 
         $category->update([
             'name' => $request->name,
-            'admin_id' => Auth::guard('admin')->id(),
+            'admin_id' => Auth::guard('admin')->user()->id,
         ]);
 
         return redirect()->route('admin.category-management.index')->with('success', 'Category updated successfully.');
     }
 
-    public function destroy(Category $category)
+    public function destroyCategory(Category $category)
     {
         if ($category->subcategories()->count() > 0) {
             return redirect()->route('admin.category-management.index')->with('error', 'Cannot delete category with existing subcategories.');
@@ -78,16 +78,17 @@ class CategoryManagementController extends Controller
         return view('admin.category-management.create-subcategory', compact('category'));
     }
 
-    public function storeSubcategory(Request $request, Category $category)
+    public function storeSubcategory(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:subcategories,name',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
         Subcategory::create([
             'name' => $request->name,
-            'category_id' => $category->id,
-            'admin_id' => Auth::guard('admin')->id(),
+            'category_id' => $request->category_id,
+            'admin_id' => Auth::guard('admin')->user()->id,
         ]);
 
         return redirect()->route('admin.category-management.index')->with('success', 'Subcategory created successfully.');
@@ -109,7 +110,7 @@ class CategoryManagementController extends Controller
         $subcategory->update([
             'name' => $request->name,
             'category_id' => $request->category_id,
-            'admin_id' => Auth::guard('admin')->id(),
+            'admin_id' => Auth::guard('admin')->user()->id,
         ]);
 
         return redirect()->route('admin.category-management.index')->with('success', 'Subcategory updated successfully.');
