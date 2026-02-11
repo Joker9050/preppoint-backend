@@ -14,6 +14,9 @@ use App\Http\Controllers\Admin\MockSubtopicController;
 use App\Http\Controllers\Admin\JobUpdateController;
 use App\Http\Controllers\Admin\ScrapedDraftController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SubcategoryController;
+use App\Http\Controllers\Admin\CategoryManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +45,17 @@ Route::middleware(['admin.auth'])->group(function () {
     Route::patch('/password/change', [AdminController::class, 'changePassword'])->name('admin.password.change');
     Route::post('/logout/all', [AdminController::class, 'logoutAllSessions'])->name('admin.logout.all');
     Route::get('/login-history', [AdminController::class, 'getLoginHistory'])->name('admin.login.history');
+
+    // Category Management Routes
+    Route::resource('categories', CategoryController::class, ['as' => 'admin']);
+    Route::resource('subcategories', SubcategoryController::class, ['as' => 'admin']);
+    Route::get('category-management', [CategoryManagementController::class, 'index'])->name('admin.category-management.index');
+    Route::post('category-management/categories', [CategoryManagementController::class, 'storeCategory'])->name('admin.category-management.categories.store');
+    Route::patch('category-management/categories/{category}', [CategoryManagementController::class, 'updateCategory'])->name('admin.category-management.categories.update');
+    Route::delete('category-management/categories/{category}', [CategoryManagementController::class, 'destroyCategory'])->name('admin.category-management.categories.destroy');
+    Route::post('category-management/subcategories', [CategoryManagementController::class, 'storeSubcategory'])->name('admin.category-management.subcategories.store');
+    Route::patch('category-management/subcategories/{subcategory}', [CategoryManagementController::class, 'updateSubcategory'])->name('admin.category-management.subcategories.update');
+    Route::delete('category-management/subcategories/{subcategory}', [CategoryManagementController::class, 'destroySubcategory'])->name('admin.category-management.subcategories.destroy');
 
     // MCQ Management Routes
     Route::resource('subjects', SubjectController::class, ['as' => 'admin']);
