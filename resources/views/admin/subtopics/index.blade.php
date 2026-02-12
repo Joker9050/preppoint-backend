@@ -53,7 +53,7 @@
                         </div>
                         <div class="ml-4">
                             <dt class="text-sm font-medium opacity-90">Topics</dt>
-                            <dd class="text-3xl font-bold">{{ $subtopics->pluck('topic')->unique()->count() }}</dd>
+                            <dd class="text-3xl font-bold">{{ $totalTopics }}</dd>
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                         </div>
                         <div class="ml-4">
                             <dt class="text-sm font-medium opacity-90">Subjects</dt>
-                            <dd class="text-3xl font-bold">{{ $subtopics->pluck('topic.subject')->unique()->count() }}</dd>
+                            <dd class="text-3xl font-bold">{{ $totalSubjects }}</dd>
                         </div>
                     </div>
                 </div>

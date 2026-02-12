@@ -32,7 +32,11 @@ class SubtopicController extends Controller
         $subjects = \App\Models\Subject::orderBy('name')->get();
         $topics = \App\Models\Topic::with('subject')->orderBy('name')->get();
 
-        return view('admin.subtopics.index', compact('subtopics', 'subjects', 'topics'));
+        // Get total counts for stats
+        $totalTopics = \App\Models\Topic::count();
+        $totalSubjects = \App\Models\Subject::count();
+
+        return view('admin.subtopics.index', compact('subtopics', 'subjects', 'topics', 'totalTopics', 'totalSubjects'));
     }
 
     public function create(Topic $topic)
