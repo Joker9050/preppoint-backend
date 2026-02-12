@@ -73,7 +73,7 @@ class SubtopicController extends Controller
             ->with('success', 'Subtopic created successfully.');
     }
 
-    public function show(Subtopic $subtopic)
+    public function show(Topic $topic, Subtopic $subtopic)
     {
         $subtopic->load(['topic.subject', 'mcqs']);
         return view('admin.subtopics.show', compact('subtopic'));

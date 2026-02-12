@@ -76,7 +76,7 @@
                 @if($topic->subtopics->count() > 0)
                     <div class="space-y-3">
                         @foreach($topic->subtopics as $subtopic)
-                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <div class="flex items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                                 <div class="flex items-center space-x-3">
                                     <div class="flex-shrink-0 w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center">
                                         <i class="fas fa-dot-circle text-indigo-600 text-xs"></i>
@@ -85,17 +85,6 @@
                                         <h3 class="text-sm font-medium text-gray-900">{{ $subtopic->name }}</h3>
                                         <p class="text-xs text-gray-500">Created {{ $subtopic->created_at->diffForHumans() }}</p>
                                     </div>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <button class="text-gray-400 hover:text-gray-600 transition-colors">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="text-gray-400 hover:text-gray-600 transition-colors">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="text-gray-400 hover:text-red-600 transition-colors">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
                                 </div>
                             </div>
                         @endforeach
