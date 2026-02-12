@@ -11,10 +11,28 @@ use Illuminate\Support\Facades\Validator;
 
 class SubtopicController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $subtopics = Subtopic::with(['topic.subject', 'mcqs'])->orderBy('name')->paginate(15);
-        return view('admin.subtopics.index', compact('subtopics'));
+        $query = Subtopic::with(['topic.subject', 'mcqs']);
+
+        // Apply filters
+        if ($request->filled('subject_id')) {
+            $query->whereHas('topic.subject', function($q) use ($request) {
+                $q->where('id', $request->subject_id);
+            });
+        }
+
+        if ($request->filled('topic_id')) {
+            $query->where('topic_id', $request->topic_id);
+        }
+
+        $subtopics = $query->orderBy('name')->paginate(15);
+
+        // Get filter options
+        $subjects = \App\Models\Subject::orderBy('name')->get();
+        $topics = \App\Models\Topic::with('subject')->orderBy('name')->get();
+
+        return view('admin.subtopics.index', compact('subtopics', 'subjects', 'topics'));
     }
 
     public function create(Topic $topic)

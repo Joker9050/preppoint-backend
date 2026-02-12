@@ -56,6 +56,12 @@
                     <span>Topics</span>
                 </a>
 
+                <!-- Subtopics -->
+                <a href="{{ route('admin.subtopics.index') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.subtopics.*') ? 'bg-indigo-700 text-white' : '' }}">
+                    <i class="fas fa-dot-circle mr-3"></i>
+                    <span>Subtopics</span>
+                </a>
+
                 <!-- MCQs -->
                 <a href="{{ route('admin.mcqs.index') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.mcqs.*') ? 'bg-indigo-700 text-white' : '' }}">
                     <i class="fas fa-question-circle mr-3"></i>

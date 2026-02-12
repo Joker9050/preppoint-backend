@@ -61,6 +61,7 @@ Route::middleware(['admin.auth'])->group(function () {
     // MCQ Management Routes
     Route::resource('subjects', SubjectController::class, ['as' => 'admin']);
     Route::resource('topics', TopicController::class, ['as' => 'admin']);
+    Route::resource('subtopics', SubtopicController::class, ['as' => 'admin']);
     Route::resource('topics.subtopics', SubtopicController::class, ['as' => 'admin']);
     Route::resource('mcqs', McqController::class, ['as' => 'admin', 'except' => ['show']]);
     Route::get('mcqs/{mcq}/preview', [McqController::class, 'preview'])->name('admin.mcqs.preview');
