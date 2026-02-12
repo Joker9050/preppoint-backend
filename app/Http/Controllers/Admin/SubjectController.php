@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use App\Models\Subcategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class SubjectController extends Controller
@@ -39,7 +40,7 @@ class SubjectController extends Controller
         Subject::create([
             'subcategory_id' => $request->subcategory_id,
             'name' => $request->name,
-            'admin_id' => auth()->id(), // Assuming admin auth is set up
+            'admin_id' => Auth::guard('admin')->user()->id,
             'priority' => $request->priority ?? 10,
         ]);
 
@@ -76,6 +77,7 @@ class SubjectController extends Controller
         $subject->update([
             'subcategory_id' => $request->subcategory_id,
             'name' => $request->name,
+            'admin_id' => Auth::guard('admin')->id(),
             'priority' => $request->priority ?? 10,
         ]);
 
