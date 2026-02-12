@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\CategoryManagementController;
+use App\Http\Controllers\Admin\SubtopicController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,7 @@ Route::middleware(['admin.auth'])->group(function () {
     // MCQ Management Routes
     Route::resource('subjects', SubjectController::class, ['as' => 'admin']);
     Route::resource('topics', TopicController::class, ['as' => 'admin']);
+    Route::resource('topics.subtopics', SubtopicController::class, ['as' => 'admin']);
     Route::resource('mcqs', McqController::class, ['as' => 'admin', 'except' => ['show']]);
     Route::get('mcqs/{mcq}/preview', [McqController::class, 'preview'])->name('admin.mcqs.preview');
     Route::get('mcqs/get-subtopics/{topic}', [McqController::class, 'getSubtopics'])->name('admin.mcqs.get-subtopics');
