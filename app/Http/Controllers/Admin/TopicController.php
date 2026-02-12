@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Topic;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class TopicController extends Controller
@@ -49,7 +50,7 @@ class TopicController extends Controller
         Topic::create([
             'subject_id' => $request->subject_id,
             'name' => $request->name,
-            'admin_id' => auth()->id(),
+            'admin_id' => Auth::guard('admin')->user()->id,
         ]);
 
         return redirect()->route('admin.topics.index')
