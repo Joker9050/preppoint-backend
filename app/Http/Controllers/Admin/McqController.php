@@ -16,6 +16,13 @@ class McqController extends Controller
     {
         $query = Mcq::with('topic', 'subtopic');
 
+        // Filter by subject
+        if ($request->filled('subject_id')) {
+            $query->whereHas('topic.subject', function($q) use ($request) {
+                $q->where('id', $request->subject_id);
+            });
+        }
+
         // Filter by topic
         if ($request->has('topic_id') && $request->topic_id) {
             $query->where('topic_id', $request->topic_id);
@@ -32,9 +39,12 @@ class McqController extends Controller
         }
 
         $mcqs = $query->paginate(15);
-        $topics = Topic::all();
 
-        return view('admin.mcqs.index', compact('mcqs', 'topics'));
+        // Get filter options
+        $subjects = \App\Models\Subject::orderBy('name')->get();
+        $topics = Topic::with('subject')->orderBy('name')->get();
+
+        return view('admin.mcqs.index', compact('mcqs', 'subjects', 'topics'));
     }
 
     public function create()
