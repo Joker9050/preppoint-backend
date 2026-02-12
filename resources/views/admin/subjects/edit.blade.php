@@ -30,7 +30,7 @@
                 <!-- Subcategory -->
                 <div>
                     <label for="subcategory_id" class="block text-sm font-medium text-gray-700">Subcategory</label>
-                    <select id="subcategory_id" name="subcategory_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('subcategory_id') border-red-300 @enderror">
+                    <select id="subcategory_id" name="subcategory_id" class="mt-1 block w-full p-1 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm @error('subcategory_id') border-red-300 @enderror">
                         <option value="">Select a subcategory</option>
                         @foreach($subcategories as $subcategory)
                         <option value="{{ $subcategory->id }}" {{ (old('subcategory_id') ?? $subject->subcategory_id) == $subcategory->id ? 'selected' : '' }}>
@@ -55,7 +55,7 @@
                 <!-- Priority -->
                 <div>
                     <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
-                    <input type="number" id="priority" name="priority" value="{{ old('priority', $subject->priority) }}" min="0" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('priority') border-red-300 @enderror" placeholder="Enter priority (lower = higher priority)">
+                    <input type="number" id="priority" name="priority" value="{{ old('priority', $subject->priority) }}" min="0" class="mt-1 block w-full p-1 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm @error('priority') border-red-300 @enderror" placeholder="Enter priority (lower = higher priority)">
                     @error('priority')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror

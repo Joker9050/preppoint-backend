@@ -27,7 +27,7 @@
                         <i class="fas fa-tags mr-2 text-indigo-500"></i>Subcategory
                     </label>
                     <div class="relative">
-                        <select id="subcategory_id" name="subcategory_id" class="appearance-none block w-full pl-4 pr-10 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out bg-white shadow-sm @error('subcategory_id') border-red-300 ring-1 ring-red-300 @enderror">
+                        <select id="subcategory_id" name="subcategory_id" class="appearance-none block w-full pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition duration-200 ease-in-out bg-white shadow-sm @error('subcategory_id') border-red-300 ring-1 ring-red-300 @enderror">
                             <option value="">Select a subcategory</option>
                             @foreach($subcategories as $subcategory)
                             <option value="{{ $subcategory->id }}" {{ old('subcategory_id') == $subcategory->id ? 'selected' : '' }}>
@@ -52,7 +52,7 @@
                         <i class="fas fa-book mr-2 text-indigo-500"></i>Subject Name
                     </label>
                     <div class="relative">
-                        <input type="text" id="name" name="name" value="{{ old('name') }}" class="block w-full pl-4 pr-12 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out shadow-sm @error('name') border-red-300 ring-1 ring-red-300 @enderror" placeholder="Enter subject name">
+                        <input type="text" id="name" name="name" value="{{ old('name') }}" class="block w-full pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition duration-200 ease-in-out shadow-sm @error('name') border-red-300 ring-1 ring-red-300 @enderror" placeholder="Enter subject name">
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                             <i class="fas fa-edit text-gray-400"></i>
                         </div>
@@ -70,7 +70,7 @@
                         <i class="fas fa-sort-numeric-up mr-2 text-indigo-500"></i>Priority
                     </label>
                     <div class="relative">
-                        <input type="number" id="priority" name="priority" value="{{ old('priority', 10) }}" min="0" class="block w-full pl-4 pr-12 py-3 text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-200 ease-in-out shadow-sm @error('priority') border-red-300 ring-1 ring-red-300 @enderror" placeholder="Enter priority (lower = higher priority)">
+                        <input type="number" id="priority" name="priority" value="{{ old('priority', 10) }}" min="0" class="block w-full pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition duration-200 ease-in-out shadow-sm @error('priority') border-red-300 ring-1 ring-red-300 @enderror" placeholder="Enter priority (lower = higher priority)">
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                             <i class="fas fa-hashtag text-gray-400"></i>
                         </div>
