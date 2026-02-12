@@ -79,9 +79,9 @@ class SubtopicController extends Controller
         return view('admin.subtopics.show', compact('subtopic'));
     }
 
-    public function edit(Subtopic $subtopic)
+    public function edit(Topic $topic, Subtopic $subtopic)
     {
-        return view('admin.subtopics.edit', compact('subtopic'));
+        return view('admin.subtopics.edit', compact('topic', 'subtopic'));
     }
 
     public function update(Request $request, Subtopic $subtopic)
