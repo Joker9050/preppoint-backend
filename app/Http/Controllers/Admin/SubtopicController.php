@@ -75,7 +75,7 @@ class SubtopicController extends Controller
 
     public function show(Subtopic $subtopic)
     {
-        $subtopic->load(['topic.subject']);
+        $subtopic->load(['topic.subject', 'mcqs']);
         return view('admin.subtopics.show', compact('subtopic'));
     }
 

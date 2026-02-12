@@ -175,7 +175,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end space-x-2">
-                                    <a href="{{ route('admin.topics.show', $subtopic->topic) }}" class="text-indigo-600 hover:text-indigo-900 transition-colors">
+                                    <a href="{{ route('admin.subtopics.show', $subtopic->topic) }}" class="text-indigo-600 hover:text-indigo-900 transition-colors">
                                         <i class="fas fa-eye"></i>
                                     </a>
                                     <a href="{{ route('admin.topics.subtopics.edit', [$subtopic->topic, $subtopic]) }}" class="text-blue-600 hover:text-blue-900 transition-colors">
