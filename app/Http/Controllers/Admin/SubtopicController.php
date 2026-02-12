@@ -84,7 +84,7 @@ class SubtopicController extends Controller
         return view('admin.subtopics.edit', compact('topic', 'subtopic'));
     }
 
-    public function update(Request $request, Subtopic $subtopic)
+    public function update(Request $request, Topic $topic, Subtopic $subtopic)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -97,7 +97,7 @@ class SubtopicController extends Controller
         }
 
         // Check for unique name within topic (excluding current)
-        $exists = Subtopic::where('topic_id', $subtopic->topic_id)
+        $exists = Subtopic::where('topic_id', $topic->id)
             ->where('name', $request->name)
             ->where('id', '!=', $subtopic->id)
             ->exists();
@@ -112,12 +112,26 @@ class SubtopicController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('admin.topics.show', $subtopic->topic)
+        return redirect()->route('admin.topics.show', $topic)
             ->with('success', 'Subtopic updated successfully.');
     }
 
-    public function destroy(Topic $topic, Subtopic $subtopic)
+    public function destroy(Request $request, $topicId = null, Subtopic $subtopic = null)
     {
+        // Handle both nested and non-nested routes
+        $topic = null;
+        if ($topicId && $subtopic) {
+            // Nested route: /topics/{topic}/subtopics/{subtopic}
+            $topic = Topic::findOrFail($topicId);
+        } elseif ($subtopic) {
+            // Non-nested route: /subtopics/{subtopic}
+            $topic = $subtopic->topic;
+        } else {
+            // Fallback for non-nested route where subtopic is passed as parameter
+            $subtopic = Subtopic::findOrFail($topicId); // $topicId is actually subtopic ID
+            $topic = $subtopic->topic;
+        }
+
         // Check if subtopic has questions
         if ($subtopic->mcqs()->count() > 0) {
             return redirect()->back()
@@ -125,7 +139,21 @@ class SubtopicController extends Controller
         }
 
         $subtopic->delete();
-        return redirect()->route('admin.topics.show', $topic)
-            ->with('success', 'Subtopic deleted successfully.');
+
+        // Redirect based on the current route
+        $routeName = $request->route()->getName();
+        if ($routeName === 'admin.subtopics.destroy') {
+            // From subtopics index or show page, redirect to subtopics index
+            return redirect()->route('admin.subtopics.index')
+                ->with('success', 'Subtopic deleted successfully.');
+        } elseif ($routeName === 'admin.topics.subtopics.destroy') {
+            // From nested route, redirect to topic show page
+            return redirect()->route('admin.topics.show', $topic)
+                ->with('success', 'Subtopic deleted successfully.');
+        } else {
+            // Default fallback
+            return redirect()->route('admin.subtopics.index')
+                ->with('success', 'Subtopic deleted successfully.');
+        }
     }
 }
