@@ -77,7 +77,7 @@ class SubjectController extends Controller
         $subject->update([
             'subcategory_id' => $request->subcategory_id,
             'name' => $request->name,
-            'admin_id' => Auth::guard('admin')->id(),
+            'admin_id' => Auth::guard('admin')->user()->id,
             'priority' => $request->priority ?? 10,
         ]);
 
