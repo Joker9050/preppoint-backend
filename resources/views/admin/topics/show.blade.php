@@ -68,7 +68,7 @@
                             {{ $topic->subtopics->count() }}
                         </span>
                     </h2>
-                    <a href="#" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-md hover:bg-indigo-100 transition-colors">
+                    <a href="{{ route('admin.topics.subtopics.create', $topic) }}" class="inline-flex items-center px-3 py-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-md hover:bg-indigo-100 transition-colors">
                         <i class="fas fa-plus mr-1.5"></i>Add Subtopic
                     </a>
                 </div>
@@ -181,10 +181,7 @@ $(document).ready(function() {
     });
 
     // Quick action handlers (placeholders for now)
-    $('button:contains("Add Subtopic")').on('click', function(e) {
-        e.preventDefault();
-        alert('Add Subtopic functionality coming soon!');
-    });
+    // Add Subtopic button is now a proper link, no need for JavaScript handler
 });
 </script>
 @endpush

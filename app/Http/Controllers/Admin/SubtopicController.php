@@ -116,7 +116,7 @@ class SubtopicController extends Controller
             ->with('success', 'Subtopic updated successfully.');
     }
 
-    public function destroy(Subtopic $subtopic)
+    public function destroy(Topic $topic, Subtopic $subtopic)
     {
         // Check if subtopic has questions
         if ($subtopic->mcqs()->count() > 0) {
@@ -124,7 +124,6 @@ class SubtopicController extends Controller
                 ->with('error', 'Cannot delete subtopic with existing questions.');
         }
 
-        $topic = $subtopic->topic;
         $subtopic->delete();
         return redirect()->route('admin.topics.show', $topic)
             ->with('success', 'Subtopic deleted successfully.');
