@@ -26,38 +26,65 @@
             @csrf
             @method('PUT')
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <!-- Subcategory -->
-                <div>
-                    <label for="subcategory_id" class="block text-sm font-medium text-gray-700">Subcategory</label>
-                    <select id="subcategory_id" name="subcategory_id" class="mt-1 block w-full p-1 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm @error('subcategory_id') border-red-300 @enderror">
-                        <option value="">Select a subcategory</option>
-                        @foreach($subcategories as $subcategory)
-                        <option value="{{ $subcategory->id }}" {{ (old('subcategory_id') ?? $subject->subcategory_id) == $subcategory->id ? 'selected' : '' }}>
-                            {{ $subcategory->name }}
-                        </option>
-                        @endforeach
-                    </select>
+                <div class="space-y-2">
+                    <label for="subcategory_id" class="flex items-center text-sm font-semibold text-gray-700">
+                        <i class="fas fa-tags mr-2 text-indigo-500"></i>Subcategory
+                    </label>
+                    <div class="relative">
+                        <select id="subcategory_id" name="subcategory_id" class="appearance-none block w-full pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition duration-200 ease-in-out bg-white shadow-sm @error('subcategory_id') border-red-300 ring-1 ring-red-300 @enderror">
+                            <option value="">Select a subcategory</option>
+                            @foreach($subcategories as $subcategory)
+                            <option value="{{ $subcategory->id }}" {{ (old('subcategory_id') ?? $subject->subcategory_id) == $subcategory->id ? 'selected' : '' }}>
+                                {{ $subcategory->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
                     @error('subcategory_id')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-red-600 flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                        </p>
                     @enderror
                 </div>
 
                 <!-- Name -->
-                <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">Subject Name</label>
-                    <input type="text" id="name" name="name" value="{{ old('name', $subject->name) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm @error('name') border-red-300 @enderror" placeholder="Enter subject name">
+                <div class="space-y-2">
+                    <label for="name" class="flex items-center text-sm font-semibold text-gray-700">
+                        <i class="fas fa-book mr-2 text-indigo-500"></i>Subject Name
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="name" name="name" value="{{ old('name', $subject->name) }}" class="block w-full pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition duration-200 ease-in-out shadow-sm @error('name') border-red-300 ring-1 ring-red-300 @enderror" placeholder="Enter subject name">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <i class="fas fa-edit text-gray-400"></i>
+                        </div>
+                    </div>
                     @error('name')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-red-600 flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                        </p>
                     @enderror
                 </div>
 
                 <!-- Priority -->
-                <div>
-                    <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
-                    <input type="number" id="priority" name="priority" value="{{ old('priority', $subject->priority) }}" min="0" class="mt-1 block w-full p-1 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm @error('priority') border-red-300 @enderror" placeholder="Enter priority (lower = higher priority)">
+                <div class="space-y-2">
+                    <label for="priority" class="flex items-center text-sm font-semibold text-gray-700">
+                        <i class="fas fa-sort-numeric-up mr-2 text-indigo-500"></i>Priority
+                    </label>
+                    <div class="relative">
+                        <input type="number" id="priority" name="priority" value="{{ old('priority', $subject->priority) }}" min="0" class="block w-full pl-3 pr-8 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black focus:border-black transition duration-200 ease-in-out shadow-sm @error('priority') border-red-300 ring-1 ring-red-300 @enderror" placeholder="Enter priority (lower = higher priority)">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <i class="fas fa-hashtag text-gray-400"></i>
+                        </div>
+                    </div>
                     @error('priority')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-2 text-sm text-red-600 flex items-center">
+                            <i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}
+                        </p>
                     @enderror
                 </div>
             </div>
