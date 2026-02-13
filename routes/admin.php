@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\Admin\CategoryManagementController;
 use App\Http\Controllers\Admin\SubtopicController;
+use App\Http\Controllers\Admin\UserManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,7 +105,14 @@ Route::middleware(['admin.auth'])->group(function () {
     // Question Management Routes
     Route::get('/questions/create', [MockExamPaperController::class, 'createQuestionPage'])->name('admin.questions.create');
     Route::post('/questions/store', [MockExamPaperController::class, 'storeQuestion'])->name('admin.questions.store');
-    
+
+    // User Management Routes
+    Route::get('/users', [UserManagementController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{id}', [UserManagementController::class, 'show'])->name('admin.users.show');
+    Route::patch('/users/{id}/block', [UserManagementController::class, 'block'])->name('admin.users.block');
+    Route::patch('/users/{id}/unblock', [UserManagementController::class, 'unblock'])->name('admin.users.unblock');
+    Route::delete('/users/{id}', [UserManagementController::class, 'destroy'])->name('admin.users.destroy');
+
     // Job Updates Management Routes
     Route::resource('job-updates', JobUpdateController::class, ['as' => 'admin']);
     Route::patch('job-updates/{job_update}/toggle-status', [JobUpdateController::class, 'toggleStatus'])->name('admin.job-updates.toggle-status');

@@ -121,6 +121,17 @@
                 </div>
             </div>
 
+            <!-- User Management -->
+            <div class="mb-4">
+                <h3 class="px-4 py-2 text-xs font-semibold text-indigo-300 uppercase tracking-wider">User Management</h3>
+
+                <!-- Users -->
+                <a href="{{ route('admin.users.index') }}" class="flex items-center py-3 px-4 text-indigo-100 hover:bg-indigo-700 hover:text-white rounded-lg transition-colors duration-200 mb-1 {{ request()->routeIs('admin.users.*') ? 'bg-indigo-700 text-white' : '' }}">
+                    <i class="fas fa-users mr-3"></i>
+                    <span>Users</span>
+                </a>
+            </div>
+
             <!-- Job Management -->
             <div class="mb-4">
                 <h3 class="px-4 py-2 text-xs font-semibold text-indigo-300 uppercase tracking-wider">Job Management</h3>
