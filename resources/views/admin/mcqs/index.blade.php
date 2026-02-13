@@ -16,48 +16,55 @@
     </div>
 
     <!-- Filters -->
-    <div class="bg-white shadow rounded-lg p-6">
-        <form method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-                <label for="topic_id" class="block text-sm font-medium text-gray-700">Topic</label>
-                <select id="topic_id" name="topic_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">All Topics</option>
-                    @foreach($topics as $topic)
-                    <option value="{{ $topic->id }}" {{ request('topic_id') == $topic->id ? 'selected' : '' }}>
-                        {{ $topic->name }}
-                    </option>
-                    @endforeach
-                </select>
-            </div>
+    <div class="bg-white shadow rounded-lg mb-6">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-medium text-gray-900">Filter MCQs</h2>
+        </div>
+        <div class="px-6 py-4">
+            <form method="GET" action="{{ route('admin.mcqs.index') }}" class="grid grid-cols-1 md:grid-cols-5 gap-3">
+                <div>
+                    <label for="topic_id" class="block text-xs font-medium text-gray-700 mb-1">Topic</label>
+                    <select id="topic_id" name="topic_id" class="block w-full px-2 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <option value="">All Topics</option>
+                        @foreach($topics as $topic)
+                        <option value="{{ $topic->id }}" {{ request('topic_id') == $topic->id ? 'selected' : '' }}>
+                            {{ $topic->name }}
+                        </option>
+                        @endforeach
+                    </select>
+                </div>
 
-            <div>
-                <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                <select id="status" name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">All Status</option>
-                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                </select>
-            </div>
+                <div>
+                    <label for="status" class="block text-xs font-medium text-gray-700 mb-1">Status</label>
+                    <select id="status" name="status" class="block w-full px-2 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <option value="">All Status</option>
+                        <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                    </select>
+                </div>
 
-            <div>
-                <label for="difficulty" class="block text-sm font-medium text-gray-700">Difficulty</label>
-                <select id="difficulty" name="difficulty" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                    <option value="">All Levels</option>
-                    <option value="easy" {{ request('difficulty') == 'easy' ? 'selected' : '' }}>Easy</option>
-                    <option value="medium" {{ request('difficulty') == 'medium' ? 'selected' : '' }}>Medium</option>
-                    <option value="hard" {{ request('difficulty') == 'hard' ? 'selected' : '' }}>Hard</option>
-                </select>
-            </div>
+                <div>
+                    <label for="difficulty" class="block text-xs font-medium text-gray-700 mb-1">Difficulty</label>
+                    <select id="difficulty" name="difficulty" class="block w-full px-2 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <option value="">All Levels</option>
+                        <option value="easy" {{ request('difficulty') == 'easy' ? 'selected' : '' }}>Easy</option>
+                        <option value="medium" {{ request('difficulty') == 'medium' ? 'selected' : '' }}>Medium</option>
+                        <option value="hard" {{ request('difficulty') == 'hard' ? 'selected' : '' }}>Hard</option>
+                    </select>
+                </div>
 
-            <div class="flex items-end space-x-2">
-                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium">
-                    <i class="fas fa-filter mr-2"></i>Filter
-                </button>
-                <a href="{{ route('admin.mcqs.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md font-medium">
-                    Clear
-                </a>
-            </div>
-        </form>
+                <div class="flex items-end">
+                    <button type="submit" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full justify-center">
+                        <i class="fas fa-filter mr-1"></i>Apply
+                    </button>
+                </div>
+                <div class="flex items-end">
+                    <a href="{{ route('admin.mcqs.index') }}" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 w-full justify-center">
+                        <i class="fas fa-times mr-1"></i>Clear
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- MCQs Table -->
